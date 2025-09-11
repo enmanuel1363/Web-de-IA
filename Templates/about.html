@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Acerca de Sistema{% endblock titulo %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row align-items-center">
+        <div class="col-md-4">
+            <img src="{{ url_for('static', filename='Smart.png') }}" class="img-fluid rounded shadow" alt="SmartIA">
+        </div>
+        <div class="col-md-6">
+            <h2 class="mb-4">¿Qué es <strong>SmartIA</strong>?</h2>
+            <p class="lead">
+                <strong>SmartIA</strong> es una plataforma creada para impulsar la transformación digital de empresas y emprendedores, mediante soluciones basadas en inteligencia artificial que simplifican procesos, aumentan la productividad y facilitan la toma de decisiones.
+            </p>
+            <p>
+                Con un diseño intuitivo y adaptable, SmartIA permite:
+            </p>
+            <ul class="list-group list-group-flush mb-3"> 
+                <li class="list-group-item">Automatizar tareas repetitivas, reduciendo tiempos y costos operativos.</li>
+                <li class="list-group-item">Analizar grandes volúmenes de datos para obtener información clave en tiempo real.</li>
+                <li class="list-group-item">Mejorar la experiencia del cliente mediante asistentes virtuales y sistemas de recomendación.</li>
+                <li class="list-group-item">Generar reportes inteligentes y predicciones que optimizan la planificación estratégica.</li>
+            </ul>
+            <p>
+               Ideal para organizaciones que buscan una herramienta práctica, innovadora y eficiente, capaz de integrar la inteligencia artificial en su día a día para lograr un crecimiento sostenible.
+            </p>
+            <a href="registro" class="btn btn-primary mt-3">Comienza ahora</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
