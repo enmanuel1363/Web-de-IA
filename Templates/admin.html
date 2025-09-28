@@ -1,4 +1,138 @@
-{% extends 'base.html' %}
+{% extends 'badmin.html' %}  {# Hereda la plantilla base 'badmin.html' #}
+
+{% block title %}Panel de Administración{% endblock %}  {# Define el título de la página #}
+
 {% block body %}
-    <h1>Estas en el usuario administrador, no cagues la pagina web</h1>
+<!-- ==========================
+  ALERTAS DE SWEETALERT2
+=========================== -->
+
+{# Mensajes de éxito que provienen de Flask usando flash() #}
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<ul class=flashes>
+    {% for category, message in messages %}
+    <script type="text/javascript">
+        // Creamos un Toast (notificación pequeña) con SweetAlert2
+        const Toast = Swal.mixin({
+            toast: true,                 // tipo toast
+            position: "top-end",         // aparece en esquina superior derecha
+            showConfirmButton: false,    // sin botón de confirmación
+            timer: 2000,                 // duración 2 segundos
+            timerProgressBar: true,      // barra de progreso
+            didOpen: (toast) => {        // pausa si se pasa el mouse encima
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+        });
+        Toast.fire({
+            icon: "success",             // icono de éxito
+            title: "{{message}}"         // mensaje dinámico de Flask
+        });
+    </script>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
+<!-- ==========================
+  ALERTA DE CONFIRMACIÓN ELIMINAR
+=========================== -->
+<script>
+    function confirmarEliminacion(url) {
+        Swal.fire({
+            title: '¿Estás seguro?',           // Título de la alerta
+            text: "¡No podrás revertir esto!", // Mensaje
+            icon: 'warning',                    // Icono de advertencia
+            showCancelButton: true,             // Muestra botón cancelar
+            confirmButtonColor: '#d33',         // Color botón confirmar
+            cancelButtonColor: '#3085d6',       // Color botón cancelar
+            confirmButtonText: 'Sí, eliminar',  // Texto del botón confirmar
+            cancelButtonText: 'Cancelar'        // Texto del botón cancelar
+        }).then((result) => {
+            if (result.isConfirmed) {           // Si confirma, redirige a la URL
+                window.location.href = url;
+            }
+        });
+    }
+</script>
+
+<!-- ==========================
+  CONTENEDOR PRINCIPAL
+=========================== -->
+<div class="container p-5 mt-3">
+    <h2 class="text-center alert alert-danger py-4">
+        Sistema de Gestión de Productos
+    </h2>
+
+    <div class="row">
+        <div class="row text-center">
+
+            <!-- ==========================
+              TARJETA 1: PERFIL DEL USUARIO
+            =========================== -->
+            <div class="col-sm-4 mb-3 mb-sm-0">
+                <div class="card" style="background: linear-gradient(180deg, #355e3b, #7a9f7a, #f1eeda);">
+                    <div class="row g-0">
+                        <div class="col-md-8">
+                            <div class="card-body text-white">
+                                <h5 class="card-title">Perfil del Usuario</h5>
+                                {# Botón que lleva a la página 'inicio' #}
+                                <a href="{{ url_for('listar_usuarios')}}" class="btn btn-outline-success">Ver Detalles</a>
+                            </div>
+                        </div>
+                        <div class="col-md-4 align-content-center">
+                            {# Imagen representativa del perfil de usuario #}
+                            <img src="{{ url_for('static', filename='user.png') }}" class="img-fluid rounded-start" alt="Agregar Usuario ...">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==========================
+              TARJETA 2: REGISTRAR PRODUCTOS
+            =========================== -->
+            <div class="col-sm-4 mb-3 mb-sm-0">
+                <div class="card" style="background: linear-gradient(180deg, #042bf1,#367cd9,#ffffff);">
+                    <div class="row g-0">
+                        <div class="col-md-8">
+                            <div class="card-body text-white">
+                                <h5 class="card-title">Registrar Productos</h5>
+                                {# Botón que puede redirigir a agregar productos #}
+                                <a href="{{ url_for('listar_productos_agregados') }}" class="btn btn-outline-success">Ver Detalles</a>
+                            </div>
+                        </div>
+                        <div class="col-md-4 align-content-center">
+                            <a href="{{ url_for('listar_productos_agregados') }}">
+                                <img src="{{ url_for('static', filename='agregarp.png') }}" class="img-fluid rounded-start" alt="Agregar Producto">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==========================
+              TARJETA 3: VISUALIZAR PRODUCTOS
+            =========================== -->
+            <div class="col-sm-4 mb-3 mb-sm-0">
+                <div class="card" style="background: linear-gradient(180deg, #0b235c,#3d85a9,#e0f7ff);">
+                    <div class="row g-0">
+                        <div class="col-md-8">
+                            <div class="card-body text-white">
+                                <h5 class="card-title">Visualizar Productos</h5>
+                                {# Botón que redirige a la vista de productos #}
+                                <a href="{{ url_for('listar_productos_agregados') }}" class="btn btn-outline-success">Ver Detalles</a>
+                            </div>
+                        </div>
+                        <div class="col-md-4 align-content-center">
+                            <img src="{{ url_for('static', filename='listarp.png') }}"class="img-fluid rounded-start" alt="Visualizar Productos">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 {% endblock %}

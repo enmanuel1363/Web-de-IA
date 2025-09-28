@@ -22,7 +22,7 @@ def home():
     return render_template('index.html')#  redirige a la pagina index.html que es la pagina principal
 
 @app.route('/admin')  
-def administrador():
+def admin():
     return render_template('admin.html')
 
 @app.route('/accesologin', methods=['GET', 'POST'])
@@ -80,6 +80,11 @@ def about():
 def login():
     return render_template('login.html')#  redirige a la pagina login.html donde te puedes logear
 
+@app.route('/logout')
+def logout():
+    session.clear()  # Limpia la sesión
+    return redirect(url_for('inicio'))
+
 @app.route('/registro', methods=['GET', 'POST'])
 def registro():
     if request.method == 'POST':
@@ -109,8 +114,16 @@ def registro():
         cursor.close()
 
         return redirect(url_for('login'))
+    
 
-    # Si es GET solo mostrar el formulario
-    return render_template('registro.html')
+@app.route('/listar_usuarios')
+def listar_usuarios():
+    return render_template('Listar_Usuarios.html')
+
+
+@app.route('/productos')
+def listar_productos_agregados():
+    return render_template('Productos.html')
+   
 if __name__=='__main__':
     app.run(debug=True, port=8000)#  ejecuta la aplicacion en el puerto 8000 y en modo debug
