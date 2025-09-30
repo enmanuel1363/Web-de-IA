@@ -1,7 +1,46 @@
-{% extends 'badmin.html' %}  
+{% extends "badmin.html" %}
 
-{% block title %}Panel de Administración{% endblock %}  
+{% block Titulo %}
+<title>Listado de Usuarios</title>
+{% endblock Titulo %}
 
 {% block body %}
-<h1>Lista de Usuarios</h1>
-{% endblock %}
+<div class="container">
+    <!-- Botón para agregar un nuevo usuario, redirige a la página de registro -->
+    <div class="d-flex justify-content-end mt-3">
+        <!-- Se pasa el parámetro 'next' para que después del registro se redirija a la lista de usuarios -->
+        <a href="{{ url_for('registro', next='listar_usuarios') }}" class="btn btn-success">Agregar Usuario</a>
+    </div>
+    <!-- Título de la página -->
+    <h1 class="mt-5 text-center">Listado de Usuarios</h1>
+    <!-- Tabla para mostrar la lista de usuarios -->
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Password</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Itera sobre la lista de usuarios pasada desde la aplicación Flask -->
+            {% for usuario in usuarios %}
+            <tr>
+                <!-- Muestra los datos de cada usuario en una fila de la tabla -->
+                <td>{{ usuario.id }}</td>
+                <td>{{ usuario.nombre }}</td>
+                <td>{{ usuario.email }}</td>
+                <td>{{ usuario.password }}</td>
+                <td>
+                    <!-- Botones para editar y eliminar un usuario -->
+                    <a href="/editar_usuario/{{ usuario.id }}" class="btn btn-primary">Editar</a>
+                    <a href="/eliminar_usuario/{{ usuario.id }}" class="btn btn-danger">Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock body %}

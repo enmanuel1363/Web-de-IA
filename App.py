@@ -87,38 +87,57 @@ def logout():
 
 @app.route('/registro', methods=['GET', 'POST'])
 def registro():
+    # Obtiene el valor del parámetro 'next' de la URL, si existe
+    next_page = request.args.get('next')
     if request.method == 'POST':
+        # Obtiene los datos del formulario de registro
         nombre = request.form.get('nombre')
         email = request.form.get('email')
         password = request.form.get('password')
         confirm_password = request.form.get('confirm_password')
 
-        # Validar que las contraseñas coincidan
+        # Valida que las contraseñas coincidan
         if password != confirm_password:
-            return render_template('Registro.html', error='Las contraseñas no coinciden')
+            return render_template('Registro.html', error='Las contraseñas no coinciden', next=next_page)
 
         cursor = mysql.connection.cursor()
 
-        # Verificar que no exista un usuario con ese email
+        # Verifica que no exista un usuario con ese email
         cursor.execute('SELECT * FROM usuario WHERE email = %s', (email,))
         existing_user = cursor.fetchone()
 
         if existing_user:
             cursor.close()
-            return render_template('Registro.html', error='El correo ya está registrado')
+            return render_template('Registro.html', error='El correo ya está registrado', next=next_page)
 
-        # Insertar nuevo usuario (id_rol por defecto 2)
+        # Inserta el nuevo usuario en la base de datos con un rol por defecto
         cursor.execute('INSERT INTO usuario (nombre, email, password, id_rol) VALUES (%s, %s, %s, %s)',
                        (nombre, email, password, 2))
         mysql.connection.commit()
         cursor.close()
 
-        return redirect(url_for('login'))
+        # Redirige a la página de listar_usuarios si el parámetro 'next' es 'listar_usuarios'
+        if next_page == 'listar_usuarios':
+            return redirect(url_for('listar_usuarios'))
+        else:
+            # Si no, redirige a la página de login
+            return redirect(url_for('login'))
     
+    # Renderiza la plantilla de registro, pasando el parámetro 'next'
+    return render_template('Registro.html', next=next_page)
 
 @app.route('/listar_usuarios')
 def listar_usuarios():
-    return render_template('Listar_Usuarios.html')
+    # Crea un cursor para ejecutar consultas a la base de datos
+    cursor = mysql.connection.cursor()
+    # Ejecuta una consulta para obtener todos los usuarios
+    cursor.execute('SELECT id, nombre, email, password FROM usuario')
+    # Obtiene todos los resultados de la consulta
+    usuarios = cursor.fetchall()
+    # Cierra el cursor
+    cursor.close()
+    # Renderiza la plantilla de listar_usuarios, pasando la lista de usuarios
+    return render_template('Listar_Usuarios.html', usuarios=usuarios)
 
 
 @app.route('/productos')
