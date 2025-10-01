@@ -38,8 +38,7 @@
 
                     <p class="text-center">o usar tu email para registrarte</p>
 
-                    <!-- Formulario de registro -->
-                   <!-- El formulario envía los datos a la ruta /registro. Se pasa el parámetro 'next' para la redirección -->
+                    <!-- Formulario -->
                    <form action="{{ url_for('registro', next=next) }}" method="POST" class="w-100" style="max-width: 400px;">
                         <div class="mb-3">
                             <input type="text" name="nombre" class="form-control" placeholder="Nombre completo"

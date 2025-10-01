@@ -69,7 +69,7 @@
                                 Productos
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{{ url_for('listar_productos_agregados') }}">Agregar</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('agregar_producto') }}">Agregar</a></li>
                                 <li><a class="dropdown-item" href="{{ url_for('listar_productos_agregados') }}">Listar</a></li>
                                 <li><a class="dropdown-item" href="#"></a></li>
                                 {# Último enlace vacío, se podría eliminar #}
@@ -79,10 +79,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('listar_usuarios') }}">Perfil</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('listar_usuarios') }}"></a>
-                            {# Otro enlace vacío #}
-                        </li>
+                        
                     </ul>
 
                     <!-- Mostrar nombre del usuario registrado -->

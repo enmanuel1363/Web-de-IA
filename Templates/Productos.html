@@ -5,5 +5,32 @@
 {% block body %}
 
 <h1>Lista de Productos</h1>
+<a href="{{ url_for('agregar_producto') }}" class="btn btn-primary mb-3">Agregar Producto</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id del producto</th>
+            <th>Nombre del producto</th>
+            <th>Precio</th>
+            <th>Descripción</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for producto in productos %}
+        <tr>
+            <td>{{ producto.id }}</td>
+            <td>{{ producto.nombre_producto }}</td>
+            <td>{{ producto.precio }}</td>
+            <td>{{ producto.descripcion }}</td>
+            <td>
+                <a href="/editar_producto/{{ producto.id }}" class="btn btn-primary btn-sm">Editar</a>
+                <a href="/eliminar_producto/{{ producto.id }}" class="btn btn-danger btn-sm">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
 {% endblock %}

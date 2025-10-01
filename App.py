@@ -142,7 +142,31 @@ def listar_usuarios():
 
 @app.route('/productos')
 def listar_productos_agregados():
-    return render_template('Productos.html')
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT id, nombre_producto, precio, descripcion FROM productos')
+    productos = cursor.fetchall()
+    cursor.close()
+    return render_template('Productos.html', productos=productos)
+
+@app.route('/agregar_producto')
+def agregar_producto():
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT id, nombre_producto, precio, descripcion FROM productos')
+    productos = cursor.fetchall()
+    cursor.close()
+    return render_template('agregar_producto.html', productos=productos)
+
+@app.route('/guardar_producto', methods=['POST'])
+def guardar_producto():
+    if request.method == 'POST':
+        nombre_producto = request.form['nombre_producto']
+        precio = request.form['precio']
+        descripcion = request.form['descripcion']
+        cursor = mysql.connection.cursor()
+        cursor.execute('INSERT INTO productos (nombre_producto, precio, descripcion) VALUES (%s, %s, %s)', (nombre_producto, precio, descripcion))
+        mysql.connection.commit()
+        cursor.close()
+        return redirect(url_for('agregar_producto'))
    
 if __name__=='__main__':
     app.run(debug=True, port=8000)#  ejecuta la aplicacion en el puerto 8000 y en modo debug
