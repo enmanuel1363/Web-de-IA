@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_mysqldb import MySQL
 app=Flask(__name__)
 
@@ -17,11 +17,22 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 mysql.init_app(app) #inicializa la conexion a la DB
 
+from functools import wraps
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'id_rol' not in session or session['id_rol'] != 1:
+            return redirect(url_for('home'))
+        return f(*args, **kwargs)
+    return decorated_function
+
 @app.route('/')
 def home():
     return render_template('index.html')#  redirige a la pagina index.html que es la pagina principal
 
-@app.route('/admin')  
+@app.route('/admin')
+@admin_required  
 def admin():
     return render_template('admin.html')
 
@@ -37,7 +48,9 @@ def accesologin():
         cursor.close()
 
         if user:
+            session['id'] = user['id']
             session['id_rol'] = user['id_rol']
+            session['nombre'] = user['nombre']
             if user['id_rol'] == 1:
                 return render_template('admin.html')
             elif user['id_rol'] == 2:
@@ -98,7 +111,7 @@ def registro():
 
         # Valida que las contraseñas coincidan
         if password != confirm_password:
-            return render_template('Registro.html', error='Las contraseñas no coinciden', next=next_page)
+            return jsonify({'success': False, 'message': 'Las contraseñas no coinciden'})
 
         cursor = mysql.connection.cursor()
 
@@ -108,7 +121,7 @@ def registro():
 
         if existing_user:
             cursor.close()
-            return render_template('Registro.html', error='El correo ya está registrado', next=next_page)
+            return jsonify({'success': False, 'message': 'El correo ya está registrado'})
 
         # Inserta el nuevo usuario en la base de datos con un rol por defecto
         cursor.execute('INSERT INTO usuario (nombre, email, password, id_rol) VALUES (%s, %s, %s, %s)',
@@ -127,6 +140,7 @@ def registro():
     return render_template('Registro.html', next=next_page)
 
 @app.route('/listar_usuarios')
+@admin_required
 def listar_usuarios():
     # Crea un cursor para ejecutar consultas a la base de datos
     cursor = mysql.connection.cursor()
@@ -139,8 +153,30 @@ def listar_usuarios():
     # Renderiza la plantilla de listar_usuarios, pasando la lista de usuarios
     return render_template('Listar_Usuarios.html', usuarios=usuarios)
 
+@app.route('/eliminar_usuario/<int:id>')
+@admin_required
+def eliminar_usuario(id):
+    cursor = mysql.connection.cursor()
+    cursor.execute('DELETE FROM usuario WHERE id = %s', (id,))
+    mysql.connection.commit()
+    cursor.close()
+    return redirect(url_for('listar_usuarios'))
+
+@app.route('/editar_usuario/<int:id>', methods=['POST'])
+@admin_required
+def editar_usuario(id):
+    cursor = mysql.connection.cursor()
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        email = request.form['email']
+        cursor.execute('UPDATE usuario SET nombre = %s, email = %s WHERE id = %s', (nombre, email, id))
+        mysql.connection.commit()
+        cursor.close()
+        return jsonify({'success': True, 'message': 'Usuario actualizado correctamente'})
+
 
 @app.route('/productos')
+@admin_required
 def listar_productos_agregados():
     cursor = mysql.connection.cursor()
     cursor.execute('SELECT id, nombre_producto, precio, descripcion FROM productos')
@@ -149,6 +185,7 @@ def listar_productos_agregados():
     return render_template('Productos.html', productos=productos)
 
 @app.route('/agregar_producto')
+@admin_required
 def agregar_producto():
     cursor = mysql.connection.cursor()
     cursor.execute('SELECT id, nombre_producto, precio, descripcion FROM productos')
@@ -167,6 +204,98 @@ def guardar_producto():
         mysql.connection.commit()
         cursor.close()
         return redirect(url_for('agregar_producto'))
+
+@app.route('/eliminar_producto/<int:id>')
+def eliminar_producto(id):
+    cursor = mysql.connection.cursor()
+    cursor.execute('DELETE FROM productos WHERE id = %s', (id,))
+    mysql.connection.commit()
+    cursor.close()
+    return redirect(url_for('listar_productos_agregados'))
+
+@app.route('/editar_producto/<int:id>', methods=['GET', 'POST'])
+def editar_producto(id):
+    cursor = mysql.connection.cursor()
+    if request.method == 'POST':
+        nombre_producto = request.form['nombre_producto']
+        precio = request.form['precio']
+        descripcion = request.form['descripcion']
+        cursor.execute('UPDATE productos SET nombre_producto = %s, precio = %s, descripcion = %s WHERE id = %s', (nombre_producto, precio, descripcion, id))
+        mysql.connection.commit()
+        cursor.close()
+        return redirect(url_for('listar'))
+    else:
+        cursor.execute('SELECT id, nombre_producto, precio, descripcion FROM productos WHERE id = %s', (id,))
+        producto = cursor.fetchone()
+        cursor.close()
+        return render_template('editar_producto.html', producto=producto)
+    
+    
+    return redirect(url_for('login'))
+
+@app.route('/cambiar_password', methods=['POST'])
+def cambiar_password():
+    if 'id' in session:
+        if request.method == 'POST':
+            current_password = request.form['current_password']
+            new_password = request.form['new_password']
+            confirm_password = request.form['confirm_password']
+
+            cursor = mysql.connection.cursor()
+            cursor.execute('SELECT password FROM usuario WHERE id = %s', (session['id'],))
+            user = cursor.fetchone()
+
+            if user and user['password'] == current_password:
+                if new_password == confirm_password:
+                    cursor.execute('UPDATE usuario SET password = %s WHERE id = %s', (new_password, session['id']))
+                    mysql.connection.commit()
+                    cursor.close()
+                    return jsonify({'success': True, 'message': 'Contraseña actualizada correctamente'})
+                else:
+                    return jsonify({'success': False, 'message': 'Las nuevas contraseñas no coinciden'})
+            else:
+                return jsonify({'success': False, 'message': 'La contraseña actual es incorrecta'})
+
+    return redirect(url_for('login'))
+
+@app.route('/editar_perfil', methods=['POST'])
+def editar_perfil():
+    if 'id' in session:
+        if request.method == 'POST':
+            nombre = request.form['nombre']
+            email = request.form['email']
+
+            cursor = mysql.connection.cursor()
+            cursor.execute('UPDATE usuario SET nombre = %s, email = %s WHERE id = %s', (nombre, email, session['id']))
+            mysql.connection.commit()
+            cursor.close()
+
+            # Actualizar el nombre en la sesión
+            session['nombre'] = nombre
+
+            return jsonify({'success': True, 'message': 'Perfil actualizado correctamente', 'usuario': {'nombre': nombre, 'email': email}})
+    
+    return redirect(url_for('login'))
+    
+@app.route('/perfil')
+def perfil():
+    if 'id' in session:
+        cursor = mysql.connection.cursor()
+        cursor.execute('SELECT * FROM usuario WHERE id = %s', (session['id'],))
+        usuario = cursor.fetchone()
+        cursor.close()
+
+        if usuario:
+            if usuario['id_rol'] == 1:
+                usuario['rol_nombre'] = 'Administrador'
+            elif usuario['id_rol'] == 2:
+                usuario['rol_nombre'] = 'Cliente'
+            else:
+                usuario['rol_nombre'] = 'Desconocido'  # O cualquier otro valor por defecto
+
+            return render_template('perfil.html', usuario=usuario)
+    
+    return redirect(url_for('login'))
    
 if __name__=='__main__':
     app.run(debug=True, port=8000)#  ejecuta la aplicacion en el puerto 8000 y en modo debug

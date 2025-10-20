@@ -25,7 +25,19 @@
                     <a class="nav-link" href="about">Acerca de</a>
                 </li>
             </ul>
-            <a href="login" style="background: linear-gradient(140deg, #121959,#172179,#384194);" class="btn btn-secondary">Login</a>
+            {% if session['id'] %}
+            <div class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{ session['nombre'] }}
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="{{ url_for('perfil') }}">Ver perfil</a></li>
+                    <li><a class="dropdown-item" href="{{ url_for('logout') }}">Cerrar sesión</a></li>
+                </ul>
+            </div>
+            {% else %}
+            <a href="login" style="background: linear-gradient(140deg,  #35bd3c,#16691a);" class="btn btn-secondary">Login</a>
+            {% endif %}
         </div>
     </div>
 </nav>

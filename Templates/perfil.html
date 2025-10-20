@@ -1,0 +1,644 @@
+{% extends 'badmin.html' %}  {# Hereda la plantilla base 'badmin.html' #}
+
+{% block title %}Panel de Administración{% endblock %}  {# Define el título de la página #}
+
+{% block body %}
+
+  
+  <style>
+    /* === Estilos generales === */
+    body {
+      background-color: #e9f3ef; /* Fondo verde pálido */
+      font-family: "Segoe UI", Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* === Navbar === */
+    .navbar {
+      background-color: #1a1a1a;
+      color: white;
+      padding: 12px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1rem;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+
+    .navbar a:hover {
+      text-decoration: underline;
+    }
+
+    .navbar .logout-btn {
+      background-color: #e6f0ec;
+      color: #009879;
+      border: 1px solid #009879;
+      padding: 5px 15px;
+      border-radius: 5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .navbar .logout-btn:hover {
+      background-color: #009879;
+      color: #fff;
+    }
+
+    /* === Encabezado del módulo === */
+    .module-header {
+      background-color: #f8caca; /* Rosa claro */
+      color: #8b0000; /* Rojo oscuro */
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      padding: 12px;
+      border-radius: 8px;
+      margin: 25px 60px 15px 60px;
+    }
+
+    /* === Contenedor principal === */
+    .container {
+      margin: 0 auto;
+      padding: 0 60px 40px 60px;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* === Tarjeta de perfil === */
+    .profile-card {
+      width: 100%;
+      max-width: 900px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    /* === Encabezado de la tarjeta === */
+    .card-header {
+      background: linear-gradient(90deg, rgba(31,99,73,1) 0%, rgba(145,188,156,1) 60%, rgba(235,246,238,0.9) 100%);
+      padding: 30px 40px;
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      position: relative;
+    }
+
+    .avatar-container {
+      width: 150px;
+      height: 150px;
+      position: relative;
+      flex: 0 0 150px;
+    }
+
+    .avatar {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 6px solid #fff;
+      object-fit: cover;
+      display: block;
+      box-shadow: 0 6px 18px rgba(10,10,10,0.08);
+    }
+
+    .camera-badge {
+      position: absolute;
+      right: 6px;
+      bottom: 6px;
+      width: 40px;
+      height: 40px;
+      background: #117ae4;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(17,122,228,0.18);
+      border: 3px solid #fff;
+      cursor: pointer;
+    }
+
+    .camera-badge svg {
+      width: 18px;
+      height: 18px;
+      fill: #fff;
+    }
+
+    .header-info {
+      color: #fff;
+      flex: 1;
+    }
+
+    .user-name {
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0 0 8px 0;
+      text-shadow: 0 2px 0 rgba(0,0,0,0.04);
+    }
+
+    .role-badge {
+      display: inline-block;
+      background: #dc3545;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    /* === Cuerpo de la tarjeta === */
+    .card-body {
+      padding: 30px 40px;
+      display: flex;
+      gap: 40px;
+    }
+
+    .info-column {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .section-title {
+      color: #067d69;
+      font-size: 18px;
+      margin: 6px 0 20px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #333;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+      background-color: #f8f9fa;
+      box-sizing: border-box;
+    }
+
+    .form-control:focus {
+      border-color: #009879;
+      outline: none;
+      background-color: #fff;
+    }
+
+    .form-control:disabled {
+      color: #6b6f6b;
+      background-color: #e9ecef;
+    }
+
+    /* === Botones de acción === */
+    .action-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .btn-edit {
+      background-color: #fff;
+      color: #009879;
+      border: 2px solid #009879;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .btn-edit:hover {
+      background-color: #009879;
+      color: #fff;
+    }
+
+    .btn-password {
+      background-color: #fff;
+      color: #dc3545;
+      border: 2px solid #dc3545;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .btn-password:hover {
+      background-color: #dc3545;
+      color: #fff;
+    }
+
+    /* === Responsive === */
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 20px 20px 20px;
+      }
+      
+      .card-body {
+        flex-direction: column;
+        padding: 20px;
+      }
+      
+      .card-header {
+        flex-direction: column;
+        text-align: center;
+        padding: 20px;
+      }
+      
+      .avatar-container {
+        margin-bottom: 15px;
+      }
+      
+      .action-buttons {
+        justify-content: center;
+      }
+    }
+
+    /* === Estilos del Modal === */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 5% auto;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    animation: slideIn 0.3s;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header {
+    background-color: #f8caca;
+    color: #8b0000;
+    padding: 15px 20px;
+    border-radius: 10px 10px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+.close {
+    color: #8b0000;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close:hover {
+    color: #ff0000;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+/* === Formulario dentro del modal === */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #009879;
+    outline: none;
+}
+
+/* === Botones del modal === */
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-cancelar {
+    background-color: #fff;
+    color: #6c757d;
+    border: 2px solid #6c757d;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.btn-cancelar:hover {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+.btn-guardar {
+    background-color: #fff;
+    color: #009879;
+    border: 2px solid #009879;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-guardar:hover {
+    background-color: #009879;
+    color: #fff;
+}
+  </style>
+</head>
+<body>
+ 
+
+  <!-- Encabezado del módulo -->
+  <div class="module-header">
+    Perfil de Usuario
+  </div>
+
+  <!-- Contenedor principal -->
+  <div class="container">
+    <div id="alert-container" style="position: fixed; top: 20px; right: 20px; z-index: 1050;"></div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            const alertContainer = document.getElementById('alert-container');
+            {% for category, message in messages %}
+              const alertDiv = document.createElement('div');
+              alertDiv.className = `alert alert-${category} alert-dismissible fade show`;
+              alertDiv.role = 'alert';
+              alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              `;
+              alertContainer.appendChild(alertDiv);
+
+              setTimeout(() => {
+                alertDiv.classList.remove('show');
+                alertDiv.classList.add('hide');
+                setTimeout(() => alertDiv.remove(), 500);
+              }, 5000);
+            {% endfor %}
+          });
+        </script>
+      {% endif %}
+    {% endwith %}
+    <div class="profile-card">
+      <!-- Encabezado de la tarjeta -->
+      <div class="card-header">
+        <div class="avatar-container">
+          <img src="{{ url_for('static', filename='usuario.png') }}" alt="Avatar" class="avatar" onerror="this.src='https://via.placeholder.com/150'">
+          <!-- <div class="camera-badge" title="Cambiar foto">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7a5 5 0 100 10 5 5 0 000-10zm8-2h-3.2l-1.6-2H8.8L7.2 5H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V7a2 2 0 00-2-2zM12 17a4 4 0 110-8 4 4 0 010 8z"></path></svg>
+          </div> -->
+        </div>
+
+        <div class="header-info">
+          <h1 class="user-name">{{ usuario.nombre }}</h1>
+          <div class="role-badge">{{ usuario.rol_nombre }}</div>
+        </div>
+      </div>
+
+      <!-- Cuerpo de la tarjeta -->
+      <div class="card-body">
+        <!-- Columna izquierda - Información personal -->
+        <div class="info-column">
+          <h3 class="section-title">Información Personal</h3>
+          
+          <div class="form-group">
+            <label for="nombreCompleto">Nombre Completo:</label>
+            <input type="text" id="nombreCompleto" class="form-control" value="{{ usuario.nombre }}" disabled>
+          </div>
+          
+          <div class="form-group">
+            <label for="idUsuario">ID de Usuario:</label>
+            <input type="text" id="idUsuario" class="form-control" value="{{ usuario.id }}" disabled>
+          </div>
+        </div>
+
+        <!-- Columna derecha - Información de cuenta -->
+        <div class="info-column">
+          <h3 class="section-title">Información de Cuenta</h3>
+          
+          <div class="form-group">
+            <label for="rol">Rol:</label>
+            <input type="text" id="rol" class="form-control" value="{{ usuario.rol_nombre }}" disabled>
+          </div>
+          
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" class="form-control" value="{{ usuario.email }}" disabled>
+          </div>
+
+          <!-- Botones de acción -->
+          <div class="action-buttons">
+            <button class="btn-edit" onclick="abrirModalEditar()">✎ Editar Perfil</button>
+            <button class="btn-password" onclick="abrirModalPassword()">🔑 Cambiar Contraseña</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para editar perfil -->
+<div id="modalEditar" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Editar Perfil</h2>
+            <span class="close" onclick="cerrarModal('modalEditar')">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="formEditar" method="POST" action="{{ url_for('editar_perfil') }}">
+                <div class="form-group">
+                    <label for="editNombre">Nombre Completo</label>
+                    <input type="text" id="editNombre" name="nombre" value="{{ usuario.nombre }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editEmail">Email</label>
+                    <input type="email" id="editEmail" name="email" value="{{ usuario.email }}" required>
+                </div>
+                
+                <div class="modal-buttons">
+                    <button type="button" class="btn-cancelar" onclick="cerrarModal('modalEditar')">Cancelar</button>
+                    <button type="submit" class="btn-guardar">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para cambiar contraseña -->
+<div id="modalPassword" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Cambiar Contraseña</h2>
+            <span class="close" onclick="cerrarModal('modalPassword')">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="formPassword" method="POST" action="{{ url_for('cambiar_password') }}">
+                <div class="form-group">
+                    <label for="current_password">Contraseña Actual</label>
+                    <input type="password" id="current_password" name="current_password" placeholder="Ingrese su contraseña actual" required>
+                </div>
+                <div class="form-group">
+                    <label for="new_password">Nueva Contraseña</label>
+                    <input type="password" id="new_password" name="new_password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirm_password">Confirmar Nueva Contraseña</label>
+                    <input type="password" id="confirm_password" name="confirm_password" required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn-cancelar" onclick="cerrarModal('modalPassword')">Cancelar</button>
+                    <button type="submit" class="btn-guardar">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+  <script>
+    // Funciones para el modal de edición
+    function abrirModalEditar() {
+        document.getElementById('modalEditar').style.display = 'block';
+    }
+
+    function abrirModalPassword() {
+        document.getElementById('modalPassword').style.display = 'block';
+    }
+
+    function cerrarModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+    }
+
+    function showAlert(message, category) {
+        const alertContainer = document.getElementById('alert-container');
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${category} alert-dismissible fade show`;
+        alertDiv.role = 'alert';
+        alertDiv.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+        alertContainer.appendChild(alertDiv);
+
+        setTimeout(() => {
+            alertDiv.classList.remove('show');
+            alertDiv.classList.add('hide');
+            setTimeout(() => alertDiv.remove(), 500);
+        }, 5000);
+    }
+
+    document.getElementById('formEditar').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        fetch('{{ url_for("editar_perfil") }}', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showAlert(data.message, 'success');
+                setTimeout(() => location.reload(), 1000);
+            } else {
+                showAlert(data.message, 'danger');
+            }
+        });
+    });
+
+    document.getElementById('formPassword').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        fetch('{{ url_for("cambiar_password") }}', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showAlert(data.message, 'success');
+                cerrarModal('modalPassword');
+            } else {
+                showAlert(data.message, 'danger');
+            }
+        });
+    });
+
+    // JavaScript para funcionalidades del perfil
+    document.addEventListener('DOMContentLoaded', function() {
+      // Botón para cambiar contraseña
+      document.querySelector('.btn-password').addEventListener('click', function() {
+        abrirModalPassword();
+      });
+    });
+  </script>
+</body>
+
+{% endblock %}

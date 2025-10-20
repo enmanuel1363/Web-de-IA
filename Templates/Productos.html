@@ -1,36 +1,578 @@
-{% extends 'badmin.html' %} 
+{% extends 'badmin.html' %}
 
 {% block title %}Panel de Administración{% endblock %}
 
 {% block body %}
 
-<h1>Lista de Productos</h1>
-<a href="{{ url_for('agregar_producto') }}" class="btn btn-primary mb-3">Agregar Producto</a>
+<div class="module-header">
+    Lista de Productos
+</div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Id del producto</th>
-            <th>Nombre del producto</th>
-            <th>Precio</th>
-            <th>Descripción</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for producto in productos %}
-        <tr>
-            <td>{{ producto.id }}</td>
-            <td>{{ producto.nombre_producto }}</td>
-            <td>{{ producto.precio }}</td>
-            <td>{{ producto.descripcion }}</td>
-            <td>
-                <a href="/editar_producto/{{ producto.id }}" class="btn btn-primary btn-sm">Editar</a>
-                <a href="/eliminar_producto/{{ producto.id }}" class="btn btn-danger btn-sm">Eliminar</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="container">
+    <a href="{{ url_for('agregar_producto') }}" class="btn btn-primary mb-3">Agregar Producto</a>
 
+    <div class="table-card">
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre del producto</th>
+                        <th>Precio</th>
+                        <th>Descripción</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for producto in productos %}
+                    <tr>
+                        <td>{{ producto.id }}</td>
+                        <td>{{ producto.nombre_producto }}</td>
+                        <td>{{ producto.precio }}</td>
+                        <td>{{ producto.descripcion }}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-edit" onclick="abrirModalEditar({{ producto.id }}, '{{ producto.nombre_producto }}', {{ producto.precio }}, '{{ producto.descripcion }}')">Editar</button>
+                                <a href="{{ url_for('eliminar_producto', id=producto.id) }}" class="btn-delete btn-eliminar">Eliminar</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para editar producto -->
+<div id="modalEditar" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Editar Producto</h2>
+            <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="formEditar" method="POST">
+                <input type="hidden" id="productoId" name="id">
+                
+                <div class="form-group">
+                    <label for="editNombre">Nombre del Producto</label>
+                    <input type="text" id="editNombre" name="nombre_producto" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editPrecio">Precio</label>
+                    <input type="text" id="editPrecio" name="precio" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editDescripcion">Descripción</label>
+                    <textarea id="editDescripcion" name="descripcion" rows="4" required></textarea>
+                </div>
+                
+                <div class="modal-buttons">
+                    <button type="button" class="btn-cancelar" onclick="cerrarModal()">Cancelar</button>
+                    <button type="button" class="btn-guardar" onclick="confirmarGuardar()">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+/* === Estilos generales === */
+body {
+    background-color: #e9f3ef; /* Fondo verde pálido */
+    font-family: "Segoe UI", Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* === Navbar === */
+.navbar {
+    background-color: #1a1a1a;
+    color: white;
+    padding: 12px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1rem;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+.navbar a:hover {
+    text-decoration: underline;
+}
+
+.navbar .logout-btn {
+    background-color: #e6f0ec;
+    color: #009879;
+    border: 1px solid #009879;
+    padding: 5px 15px;
+    border-radius: 5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.navbar .logout-btn:hover {
+    background-color: #009879;
+    color: #fff;
+}
+
+/* === Encabezado del módulo === */
+.module-header {
+    background-color: #f8caca; /* Rosa claro */
+    color: #8b0000; /* Rojo oscuro */
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 12px;
+    border-radius: 8px;
+    margin: 25px 60px 15px 60px;
+}
+
+/* === Contenedor principal === */
+.container {
+    margin: 0 auto;
+    padding: 0 60px 40px 60px;
+}
+
+/* === Botones de exportar === */
+.export-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.export-buttons button {
+    background-color: #fff;
+    border: 2px solid #009879;
+    color: #009879;
+    padding: 8px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.export-buttons button:hover {
+    background-color: #009879;
+    color: #fff;
+}
+
+/* === Tarjeta contenedora de tabla === */
+.table-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    padding: 20px;
+}
+
+/* === Tabla === */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+}
+
+thead {
+    background-color: #1f1f1f; /* Negro-gris oscuro */
+    color: white;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f7f7f7;
+}
+
+tbody tr:hover {
+    background-color: #e6f8f4;
+}
+
+/* === Inputs dentro de celdas (editable) === */
+table input {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 6px 8px;
+    font-size: 14px;
+    background-color: #fafafa;
+}
+
+table input:focus {
+    border-color: #009879;
+    outline: none;
+    background-color: #fff;
+}
+
+/* === Acciones === */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.action-buttons .btn-edit {
+    background-color: #198754; /* Verde Bootstrap */
+    color: white;
+    border: none;
+    padding: 7px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.2s;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.action-buttons .btn-edit:hover {
+    background-color: #157347;
+}
+
+.action-buttons .btn-delete {
+    background-color: #dc3545; /* Rojo Bootstrap */
+    color: white;
+    border: none;
+    padding: 7px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.2s;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.action-buttons .btn-delete:hover {
+    background-color: #bb2d3b;
+}
+
+/* === Estilos DataTables (si usas jQuery DataTables) === */
+.dataTables_wrapper {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.dataTables_filter input {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 5px 8px;
+    margin-left: 6px;
+}
+
+.dataTables_length select {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 4px 8px;
+}
+
+/* === Scroll en tabla === */
+.table-container {
+    max-height: 500px;
+    overflow-y: auto;
+    border-radius: 8px;
+}
+
+/* === Botón Agregar Producto === */
+.btn-primary {
+    background-color: #fff;
+    border: 2px solid #009879;
+    color: #009879;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    margin-bottom: 15px;
+}
+
+.btn-primary:hover {
+    background-color: #009879;
+    color: #fff;
+}
+
+/* === Estilos del Modal === */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 5% auto;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    animation: slideIn 0.3s;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header {
+    background-color: #f8caca;
+    color: #8b0000;
+    padding: 15px 20px;
+    border-radius: 10px 10px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+.close {
+    color: #8b0000;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close:hover {
+    color: #ff0000;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+/* === Formulario dentro del modal === */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #009879;
+    outline: none;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* === Botones del modal === */
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-cancelar {
+    background-color: #fff;
+    color: #6c757d;
+    border: 2px solid #6c757d;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.btn-cancelar:hover {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+.btn-guardar {
+    background-color: #fff;
+    color: #009879;
+    border: 2px solid #009879;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-guardar:hover {
+    background-color: #009879;
+    color: #fff;
+}
+</style>
+
+<script>
+// Variable global para almacenar el ID del producto actual
+let productoActualId = null;
+
+// Funciones para el modal de edición
+function abrirModalEditar(id, nombre, precio, descripcion) {
+    productoActualId = id;
+    document.getElementById('productoId').value = id;
+    document.getElementById('editNombre').value = nombre;
+    document.getElementById('editPrecio').value = precio;
+    document.getElementById('editDescripcion').value = descripcion;
+    
+    document.getElementById('modalEditar').style.display = 'block';
+}
+
+function cerrarModal() {
+    document.getElementById('modalEditar').style.display = 'none';
+    productoActualId = null;
+}
+
+// Función para confirmar guardar cambios
+function confirmarGuardar() {
+    Swal.fire({
+        title: '¿Está seguro que desea guardar los cambios de este producto?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, editar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            enviarFormularioEdicion();
+        }
+    });
+}
+
+// Función para enviar el formulario de edición
+function enviarFormularioEdicion() {
+    const formData = new FormData(document.getElementById('formEditar'));
+    
+    // Enviar los datos al servidor usando fetch
+    fetch(`/editar_producto/${productoActualId}`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        if (response.redirected) {
+            // Si hay redirección, seguirla
+            window.location.href = response.url;
+            return;
+        }
+        return response.json().catch(() => null);
+    })
+    .then(data => {
+        if (data && data.success) {
+            Swal.fire({
+                title: '¡Éxito!',
+                text: 'Producto actualizado correctamente',
+                icon: 'success',
+                confirmButtonText: 'Aceptar'
+            }).then(() => {
+                cerrarModal();
+                location.reload();
+            });
+        } else if (!data) {
+            // Si no hay data pero la respuesta fue exitosa, recargar
+            Swal.fire({
+                title: '¡Éxito!',
+                text: 'Producto actualizado correctamente',
+                icon: 'success',
+                confirmButtonText: 'Aceptar'
+            }).then(() => {
+                cerrarModal();
+                location.reload();
+            });
+        } else {
+            Swal.fire({
+                title: 'Error',
+                text: data.message || 'Hubo un problema al actualizar el producto',
+                icon: 'error',
+                confirmButtonText: 'Aceptar'
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        Swal.fire({
+            title: 'Error',
+            text: 'Hubo un problema al actualizar el producto',
+            icon: 'error',
+            confirmButtonText: 'Aceptar'
+        });
+    });
+}
+
+// Cerrar modal al hacer clic en la X
+document.querySelector('.close').addEventListener('click', cerrarModal);
+
+// Cerrar modal al hacer clic fuera del contenido
+window.addEventListener('click', function(event) {
+    const modal = document.getElementById('modalEditar');
+    if (event.target === modal) {
+        cerrarModal();
+    }
+});
+
+// JavaScript original para eliminar productos
+document.addEventListener('DOMContentLoaded', function () {
+    const deleteButtons = document.querySelectorAll('.btn-eliminar');
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function (e) {
+            e.preventDefault();
+            const url = this.href;
+
+            Swal.fire({
+                title: '¿Está seguro que desea eliminar este producto?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+                }
+            });
+        });
+    });
+});
+</script>
 {% endblock %}

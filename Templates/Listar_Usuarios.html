@@ -1,46 +1,492 @@
-{% extends "badmin.html" %}
+{% extends 'badmin.html' %}
 
-{% block Titulo %}
-<title>Listado de Usuarios</title>
-{% endblock Titulo %}
+{% block title %}Panel de Administración{% endblock %}
 
 {% block body %}
-<div class="container">
-    <!-- Botón para agregar un nuevo usuario, redirige a la página de registro -->
-    <div class="d-flex justify-content-end mt-3">
-        <!-- Se pasa el parámetro 'next' para que después del registro se redirija a la lista de usuarios -->
-        <a href="{{ url_for('registro', next='listar_usuarios') }}" class="btn btn-success">Agregar Usuario</a>
-    </div>
-    <!-- Título de la página -->
-    <h1 class="mt-5 text-center">Listado de Usuarios</h1>
-    <!-- Tabla para mostrar la lista de usuarios -->
-    <table class="table table-striped mt-3">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Correo</th>
-                <th>Password</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Itera sobre la lista de usuarios pasada desde la aplicación Flask -->
-            {% for usuario in usuarios %}
-            <tr>
-                <!-- Muestra los datos de cada usuario en una fila de la tabla -->
-                <td>{{ usuario.id }}</td>
-                <td>{{ usuario.nombre }}</td>
-                <td>{{ usuario.email }}</td>
-                <td>{{ usuario.password }}</td>
-                <td>
-                    <!-- Botones para editar y eliminar un usuario -->
-                    <a href="/editar_usuario/{{ usuario.id }}" class="btn btn-primary">Editar</a>
-                    <a href="/eliminar_usuario/{{ usuario.id }}" class="btn btn-danger">Eliminar</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+
+<div class="module-header">
+    Lista de Usuarios
 </div>
-{% endblock body %}
+
+<div class="container">
+    <div id="alert-container" style="position: fixed; top: 20px; right: 20px; z-index: 1050;"></div>
+    <button class="btn btn-primary mb-3" onclick="abrirModalAgregar()">Agregar Usuario</button>
+
+    <div class="table-card">
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Password</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for usuario in usuarios %}
+                    <tr>
+                        <td>{{ usuario.id }}</td>
+                        <td>{{ usuario.nombre }}</td>
+                        <td>{{ usuario.email }}</td>
+                        <td>{{ usuario.password }}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-edit" onclick="abrirModalEditar({{ usuario.id }}, '{{ usuario.nombre }}', '{{ usuario.email }}')">Editar</button>
+                                <a href="{{ url_for('eliminar_usuario', id=usuario.id) }}" class="btn-delete btn-eliminar">Eliminar</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para editar usuario -->
+<div id="modalEditar" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Editar Usuario</h2>
+            <span class="close" onclick="cerrarModal('modalEditar')">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="formEditar" method="POST">
+                <input type="hidden" id="editUsuarioId" name="id">
+                <div class="form-group">
+                    <label for="editNombre">Nombre</label>
+                    <input type="text" id="editNombre" name="nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="editEmail">Correo</label>
+                    <input type="email" id="editEmail" name="email" required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn-cancelar" onclick="cerrarModal('modalEditar')">Cancelar</button>
+                    <button type="submit" id="btnGuardarCambios" class="btn-guardar">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para agregar usuario -->
+<div id="modalAgregar" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Agregar Usuario</h2>
+            <span class="close" onclick="cerrarModal('modalAgregar')">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="formAgregar" method="POST" action="{{ url_for('registro', next='listar_usuarios') }}">
+                <div class="form-group">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" id="nombre" name="nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Correo</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirm_password">Confirmar Contraseña</label>
+                    <input type="password" id="confirm_password" name="confirm_password" required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn-cancelar" onclick="cerrarModal('modalAgregar')">Cancelar</button>
+                    <button type="submit" class="btn-guardar">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+/* === Estilos generales === */
+body {
+    background-color: #e9f3ef; /* Fondo verde pálido */
+    font-family: "Segoe UI", Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* === Encabezado del módulo === */
+.module-header {
+    background-color: #f8caca; /* Rosa claro */
+    color: #8b0000; /* Rojo oscuro */
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 12px;
+    border-radius: 8px;
+    margin: 25px 60px 15px 60px;
+}
+
+/* === Contenedor principal === */
+.container {
+    margin: 0 auto;
+    padding: 0 60px 40px 60px;
+}
+
+/* === Tarjeta contenedora de tabla === */
+.table-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    padding: 20px;
+}
+
+/* === Tabla === */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+}
+
+thead {
+    background-color: #1f1f1f; /* Negro-gris oscuro */
+    color: white;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f7f7f7;
+}
+
+tbody tr:hover {
+    background-color: #e6f8f4;
+}
+
+/* === Acciones === */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.action-buttons .btn-edit {
+    background-color: #198754; /* Verde Bootstrap */
+    color: white;
+    border: none;
+    padding: 7px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.2s;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.action-buttons .btn-edit:hover {
+    background-color: #157347;
+}
+
+.action-buttons .btn-delete {
+    background-color: #dc3545; /* Rojo Bootstrap */
+    color: white;
+    border: none;
+    padding: 7px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.2s;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.action-buttons .btn-delete:hover {
+    background-color: #bb2d3b;
+}
+
+/* === Scroll en tabla === */
+.table-container {
+    max-height: 500px;
+    overflow-y: auto;
+    border-radius: 8px;
+}
+
+/* === Botón Agregar Usuario === */
+.btn-primary {
+    background-color: #fff;
+    border: 2px solid #009879;
+    color: #009879;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    margin-bottom: 15px;
+}
+
+.btn-primary:hover {
+    background-color: #009879;
+    color: #fff;
+}
+
+/* === Estilos del Modal === */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 5% auto;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    animation: slideIn 0.3s;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header {
+    background-color: #f8caca;
+    color: #8b0000;
+    padding: 15px 20px;
+    border-radius: 10px 10px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+.close {
+    color: #8b0000;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close:hover {
+    color: #ff0000;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+/* === Formulario dentro del modal === */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #009879;
+    outline: none;
+}
+
+/* === Botones del modal === */
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-cancelar {
+    background-color: #fff;
+    color: #6c757d;
+    border: 2px solid #6c757d;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.btn-cancelar:hover {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+.btn-guardar {
+    background-color: #fff;
+    color: #009879;
+    border: 2px solid #009879;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-guardar:hover {
+    background-color: #009879;
+    color: #fff;
+}
+</style>
+
+<script>
+function abrirModalAgregar() {
+    document.getElementById('modalAgregar').style.display = 'block';
+}
+
+function abrirModalEditar(id, nombre, email) {
+    document.getElementById('editUsuarioId').value = id;
+    document.getElementById('editNombre').value = nombre;
+    document.getElementById('editEmail').value = email;
+    document.getElementById('formEditar').action = `/editar_usuario/${id}`;
+    document.getElementById('modalEditar').style.display = 'block';
+}
+
+function cerrarModal(modalId) {
+    const modal = document.getElementById(modalId);
+    modal.style.display = 'none';
+    const form = modal.querySelector('form');
+    if (form) {
+        form.reset();
+    }
+}
+
+function showAlert(message, category) {
+    const alertContainer = document.getElementById('alert-container');
+    if (!alertContainer) return;
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${category} alert-dismissible fade show`;
+    alertDiv.role = 'alert';
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+    alertContainer.appendChild(alertDiv);
+
+    setTimeout(() => {
+        alertDiv.classList.remove('show');
+        alertDiv.classList.add('hide');
+        setTimeout(() => alertDiv.remove(), 500);
+    }, 5000);
+}
+
+document.getElementById('formAgregar').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    fetch(this.action, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (response.redirected) {
+            window.location.href = response.url;
+        } else {
+            return response.json();
+        }
+    })
+    .then(data => {
+        if (data && !data.success) {
+            showAlert(data.message, 'danger');
+        }
+    });
+});
+
+document.getElementById('formEditar').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    fetch(this.action, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showAlert(data.message, 'success');
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            showAlert(data.message, 'danger');
+        }
+    });
+});
+
+document.getElementById('btnGuardarCambios').addEventListener('click', function(e) {
+    e.preventDefault();
+    Swal.fire({
+        title: '¿Está seguro que desea guardar los cambios de este usuario?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, editar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('formEditar').dispatchEvent(new Event('submit', { cancelable: true }));
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const deleteButtons = document.querySelectorAll('.btn-eliminar');
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function (e) {
+            e.preventDefault(); // Evita la redirección inmediata
+            const url = this.href; // Captura la URL del botón presionado
+
+            Swal.fire({
+                title: '¿Está seguro que desea eliminar este usuario?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url; // Redirige a la URL de eliminación si se confirma
+                }
+            });
+        });
+    });
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "badmin.html" %}
+
+{% block Titulo %}
+<title>Editar Usuario</title>
+{% endblock Titulo %}
+
+{% block body %}
+<div class="container">
+    <h1 class="mt-5 text-center">Editar Usuario</h1>
+    <form action="{{ url_for('editar_usuario', id=usuario.id) }}" method="POST" class="mt-3">
+        <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="nombre" name="nombre" value="{{ usuario.nombre }}">
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Correo</label>
+            <input type="email" class="form-control" id="email" name="email" value="{{ usuario.email }}">
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="text" class="form-control" id="password" name="password" value="{{ usuario.password }}">
+        </div>
+        <button type="submit" class="btn btn-guardar btn-primary">Guardar Cambios</button>
+        <a href="{{ url_for('listar_usuarios') }}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+<script>
+   document.addEventListener('DOMContentLoaded', function () {
+        const saveButtons = document.querySelectorAll('.btn-guardar');
+        saveButtons.forEach(button => {
+            button.addEventListener('click', function (e) {
+                e.preventDefault(); // Evita la redirección inmediata
+                const url = this.href; // Captura la URL del botón presionado
+
+                Swal.fire({
+                    title: '¿Está seguro que desea guardar los cambios de este usuario?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, editar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = url; // Redirige a la URL de edición si se confirma
+                    }
+                });
+            });
+        });
+    });
+</script>
+
+{% endblock body %}
