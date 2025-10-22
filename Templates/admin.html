@@ -61,7 +61,7 @@
   CONTENEDOR PRINCIPAL
 =========================== -->
 <div class="container p-5 mt-3">
-    <h2 class="text-center alert alert-danger py-4">
+    <h2 class="text-center alert ">
         Sistema de Gestión de Productos
     </h2>
 
@@ -72,7 +72,7 @@
               TARJETA 1: PERFIL DEL USUARIO
             =========================== -->
             <div class="col-sm-4 mb-3 mb-sm-0">
-                <div class="card" style="background: linear-gradient(180deg, #355e3b, #7a9f7a, #f1eeda);">
+                <div class="card" style="background: linear-gradient(180deg,  #0f172a,#10315c,#0f172a);">
                     <div class="row g-0">
                         <div class="col-md-8">
                             <div class="card-body text-white">
@@ -83,7 +83,7 @@
                         </div>
                         <div class="col-md-4 align-content-center">
                             {# Imagen representativa del perfil de usuario #}
-                            <img src="{{ url_for('static', filename='user.png') }}" class="img-fluid rounded-start" alt="Agregar Usuario ...">
+                            <img src="{{ url_for('static', filename='img/user.png') }}" class="img-fluid rounded-start" alt="Agregar Usuario ...">
                         </div>
                     </div>
                 </div>
@@ -93,7 +93,7 @@
               TARJETA 2: REGISTRAR PRODUCTOS
             =========================== -->
             <div class="col-sm-4 mb-3 mb-sm-0">
-                <div class="card" style="background: linear-gradient(180deg, #042bf1,#367cd9,#ffffff);">
+                <div class="card" style="background: linear-gradient(180deg, #0f172a,#10315c,#0f172a);">
                     <div class="row g-0">
                         <div class="col-md-8">
                             <div class="card-body text-white">
@@ -104,7 +104,7 @@
                         </div>
                         <div class="col-md-4 align-content-center">
                             <a href="{{ url_for('agregar_producto') }}">
-                                <img src="{{ url_for('static', filename='agregarp.png') }}" class="img-fluid rounded-start" alt="Agregar Producto">
+                                <img src="{{ url_for('static', filename='img/agregarp.png') }}" class="img-fluid rounded-start" alt="Agregar Producto">
                             </a>
                         </div>
                     </div>
@@ -115,7 +115,7 @@
               TARJETA 3: VISUALIZAR PRODUCTOS
             =========================== -->
             <div class="col-sm-4 mb-3 mb-sm-0">
-                <div class="card" style="background: linear-gradient(180deg, #0b235c,#3d85a9,#e0f7ff);">
+                <div class="card" style="background: linear-gradient(180deg,  #0f172a,#10315c,#0f172a);">
                     <div class="row g-0">
                         <div class="col-md-8">
                             <div class="card-body text-white">
@@ -125,7 +125,7 @@
                             </div>
                         </div>
                         <div class="col-md-4 align-content-center">
-                            <img src="{{ url_for('static', filename='listarp.png') }}"class="img-fluid rounded-start" alt="Visualizar Productos">
+                            <img src="{{ url_for('static', filename='img/listarp.png') }}" class="img-fluid rounded-start" alt="Visualizar Productos">
                         </div>
                     </div>
                 </div>

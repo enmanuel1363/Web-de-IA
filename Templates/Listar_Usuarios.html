@@ -27,7 +27,7 @@
                 <tbody>
                     {% for usuario in usuarios %}
                     <tr>
-                        <td>{{ usuario.id }}</td>
+                        <td>{{ loop.index }}</td>
                         <td>{{ usuario.nombre }}</td>
                         <td>{{ usuario.email }}</td>
                         <td>{{ usuario.password }}</td>
@@ -117,8 +117,8 @@ body {
 
 /* === Encabezado del módulo === */
 .module-header {
-    background-color: #f8caca; /* Rosa claro */
-    color: #8b0000; /* Rojo oscuro */
+    background-color: #0f172a; /* Rosa claro */
+    color: white; /* Rojo oscuro */
     text-align: center;
     font-size: 1.5rem;
     font-weight: bold;

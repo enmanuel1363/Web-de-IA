@@ -3,16 +3,16 @@
 {% block titulo %} Registrarse {% endblock titulo %}
 
 {% block body %}
-<div class="d-flex justify-content-center align-items-center vh-100" style="background-color: #a5ada8;">
+<div class="d-flex justify-content-center align-items-center vh-100" style="background-color: #0f172a;">
     <!-- Contenedor flotante externo -->
     <div class="p-4 w-100" style="max-width: 1100px;">
-        <div class="rounded-5 shadow-lg p-4" style="background-color: #cecacaf1;">
+        <div class="rounded-5 shadow-lg p-4" style="background-color: #0f172a;">
             <div class="row g-0">
 
                 <!-- Columna izquierda -->
                 <div class=" rounded-5 col-md-6 d-flex flex-column justify-content-center align-items-center text-white p-4"
-                    style="background-color: #a5ada8;">
-                    <img src="{{ url_for('static', filename='usuario.png') }}" class="img-fluid mb-3"
+                    style="background-color: #0f172a;">
+                    <img src="{{ url_for('static', filename='img/usuario.png') }}" class="img-fluid mb-3"
                         style="max-width: 50%; height: 20%; object-fit: contain;">
                     <h2 class="text-center">¡Bienvenido!</h2>
                     <p class="text-center" style="font-family: 'Lucida Console', monospace;">
@@ -31,7 +31,7 @@
                     <button type="button"
                         class="btn btn-light w-100 d-flex align-items-center justify-content-center mb-3"
                         style="max-width: 400px; height: 45px;">
-                        <img src="{{ url_for('static', filename='google.webp') }}" alt="Google Logo"
+                        <img src="{{ url_for('static', filename='img/google.webp') }}" alt="Google Logo"
                             style="width: 20px; margin-right: 10px;">
                         Iniciar con Google
                     </button>

@@ -8,7 +8,7 @@
   <style>
     /* === Estilos generales === */
     body {
-      background-color: #e9f3ef; /* Fondo verde pálido */
+      background-color:  #0f172a; /* Fondo verde pálido */
       font-family: "Segoe UI", Arial, sans-serif;
       margin: 0;
       padding: 0;
@@ -17,7 +17,7 @@
     /* === Navbar === */
     .navbar {
       background-color: #1a1a1a;
-      color: white;
+      color:  #0f172a;
       padding: 12px 40px;
       display: flex;
       justify-content: space-between;
@@ -36,8 +36,8 @@
     }
 
     .navbar .logout-btn {
-      background-color: #e6f0ec;
-      color: #009879;
+      background-color:  #0f172a;
+      color: #0f172a;
       border: 1px solid #009879;
       padding: 5px 15px;
       border-radius: 5px;
@@ -53,8 +53,8 @@
 
     /* === Encabezado del módulo === */
     .module-header {
-      background-color: #f8caca; /* Rosa claro */
-      color: #8b0000; /* Rojo oscuro */
+      background-color: #0f172a; /* Rosa claro */
+      color: white; /* Rojo oscuro */
       text-align: center;
       font-size: 1.5rem;
       font-weight: bold;
@@ -83,7 +83,7 @@
 
     /* === Encabezado de la tarjeta === */
     .card-header {
-      background: linear-gradient(90deg, rgba(31,99,73,1) 0%, rgba(145,188,156,1) 60%, rgba(235,246,238,0.9) 100%);
+      background: linear-gradient(90deg, rgba(15,23,42) 0%, rgba(16,49,92) 60%, rgba(15,23,42) 100%);
       padding: 30px 40px;
       display: flex;
       align-items: center;
@@ -452,7 +452,7 @@
       <!-- Encabezado de la tarjeta -->
       <div class="card-header">
         <div class="avatar-container">
-          <img src="{{ url_for('static', filename='usuario.png') }}" alt="Avatar" class="avatar" onerror="this.src='https://via.placeholder.com/150'">
+          <img src="{{ url_for('static', filename='img/usuario.png') }}" alt="Avatar" class="avatar" onerror="this.src='https://via.placeholder.com/150'">
           <!-- <div class="camera-badge" title="Cambiar foto">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7a5 5 0 100 10 5 5 0 000-10zm8-2h-3.2l-1.6-2H8.8L7.2 5H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V7a2 2 0 00-2-2zM12 17a4 4 0 110-8 4 4 0 010 8z"></path></svg>
           </div> -->

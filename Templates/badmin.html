@@ -1,113 +1,130 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 
 <head>
-    <title>{% block titulo %} {% endblock %}</title> 
-    {# Bloque de título dinámico que cada página puede definir #}
+    <title>{% block titulo %}AI ACADEMY{% endblock %}</title>
 
     <!-- Required meta tags -->
-    <meta charset="utf-8" /> 
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    {# Meta viewport para diseño responsivo en móviles #}
-
-    <!-- Bootstrap CSS v5.2.1 -->
+    <meta name="description" content="Plataforma de administración para AI ACADEMY - Sistema de gestión de cursos y productos">
+    
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
-    {# Bootstrap CSS desde CDN #}
 
-    <!-- SweetAlert2 CSS y JS -->
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.23.0/dist/sweetalert2.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.23.0/dist/sweetalert2.all.min.js"></script>
-    {# Librería para alertas bonitas y modales #}
-
-    <!-- Iconos de Bootstrap -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    {# Iconos SVG de Bootstrap #}
 
     <!-- CSS personalizado -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
-    {# Archivo CSS propio ubicado en /static/css/estilo.css #}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
 
     <!-- DataTables CSS -->
     <link href="DataTables/datatables.min.css" rel="stylesheet">
-    {# Estilo de DataTables para tablas interactivas #}
+
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --secondary-color: #1e293b;
+            --accent-color: #00d4ff;
+            --accent-secondary: #7c3aed;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --card-bg: #1e293b;
+            --hover-color: #334155;
+        }
+    </style>
 </head>
 
-<body class="bg-success bg-opacity-10">
-    {# Color de fondo verde claro con opacidad 10% #}
-
+<body class="admin-body">
     <header>
-        <!-- Navbar principal -->
-        <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark"
-            style="background: linear-gradient(92deg, #000000,#242424,#5f5e5d,#e6e6e6);">
+        <!-- Navbar Mejorado -->
+        <nav class="navbar navbar-expand-lg navbar-admin fixed-top">
             <div class="container">
-                <!-- Logo o nombre del sistema -->
-                <a class="navbar-brand" href="#">Sistema</a>
+                <a class="navbar-brand-admin" href="#">
+                    <i class="fas fa-robot me-2"></i>SMARTIA ADMIN
+                </a>
 
-                <!-- Botón hamburguesa para pantallas pequeñas -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <!-- Menú colapsable -->
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav justify-content-center flex-grow-1">
-                        <!-- Elementos de navegación -->
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="{{ url_for('admin') }}"></a>
-                            {# Enlace vacío, probablemente se pueda eliminar #}
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('admin') }}">Inicio</a>
+                            <a class="nav-link-admin" href="{{ url_for('admin') }}">
+                                <i class="fas fa-home me-1"></i>Inicio
+                            </a>
                         </li>
 
-                        <!-- Dropdown de Productos -->
+                        <!-- Dropdown de Gestión CORREGIDO -->
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                Productos
+                            <a class="nav-link-admin dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" 
+                               aria-expanded="false">
+                                <i class="fas fa-box me-1"></i>Gestión
                             </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{{ url_for('agregar_producto') }}">Agregar</a></li>
-                                <li><a class="dropdown-item" href="{{ url_for('listar_productos_agregados') }}">Listar</a></li>
-                                <li><a class="dropdown-item" href="#"></a></li>
-                                {# Último enlace vacío, se podría eliminar #}
+                            <ul class="dropdown-menu dropdown-menu-admin">
+                                <li><a class="dropdown-item dropdown-item-admin" href="{{ url_for('agregar_producto') }}">
+                                    <i class="fas fa-plus-circle me-2"></i>Agregar Curso
+                                </a></li>
+                                <li><a class="dropdown-item dropdown-item-admin" href="{{ url_for('listar_productos_agregados') }}">
+                                    <i class="fas fa-list me-2"></i>Listar Cursos
+                                </a></li>
                             </ul>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('perfil') }}">Perfil</a>
+                            <a class="nav-link-admin" href="{{ url_for('perfil') }}">
+                                <i class="fas fa-user me-1"></i>Perfil
+                            </a>
                         </li>
-                        
                     </ul>
 
-                    <!-- Mostrar nombre del usuario registrado -->
-                    {% if session['nombre'] %}
-                    <span class="navbar-text text-light ms-2">
-                        {{ session['nombre'] }}
-                        {# Nombre del usuario almacenado en la sesión de Flask #}
-                    </span>
-                    {% endif %}
+                    <!-- Información de usuario -->
+                    <div class="navbar-user-info">
+                        {% if session['nombre'] %}
+                        <span class="user-welcome">
+                            <i class="fas fa-user-circle me-2"></i>Bienvenido, <strong>{{ session['nombre'] }}</strong>
+                        </span>
+                        {% endif %}
 
-                    <!-- Botón para cerrar sesión -->
-                    <a class="btn btn-outline-success" href="{{ url_for('logout') }}">SALIR</a>
+                        <!-- Botón para cerrar sesión -->
+                        <a class="btn-logout" href="{{ url_for('logout') }}">
+                            <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+                        </a>
+                    </div>
                 </div>
             </div>
         </nav>
     </header>
 
-    <!-- Contenido principal de cada página -->
-    <main>
-        {% block body %}
-        {% endblock %}
+    <!-- Contenido principal -->
+    <main class="admin-main">
+        <div class="container-fluid">
+            {% block body %}
+            <!-- El contenido específico de cada página irá aquí -->
+            {% endblock %}
+        </div>
     </main>
 
-    <!-- Footer -->
-    <footer>
-        <hr>
-        <div class="container bg-light">
-            <p class="text-center">Copyright © 2025 - UNAN Managua</p>
+    <!-- Footer Mejorado -->
+    <footer class="admin-footer">
+        <div class="container">
+            <div class="footer-content">
+                <p class="footer-text">
+                    <i class="fas fa-graduation-cap me-2"></i>Copyright © 2025 - SMARTIA Platform
+                </p>
+                <p class="footer-subtext">Sistema de Gestión Educativa</p>
+            </div>
         </div>
     </footer>
 
@@ -115,7 +132,7 @@
       SCRIPTS
     =========================== -->
 
-    <!-- Bootstrap JS y Popper.js -->
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
         crossorigin="anonymous"></script>
@@ -123,29 +140,46 @@
         integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
         crossorigin="anonymous"></script>
 
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.23.0/dist/sweetalert2.all.min.js"></script>
+
     <!-- DataTables JS -->
     <script src="DataTables/datatables.min.js"></script>
 
-    <!-- Alerta de confirmación al cerrar sesión -->
+    <!-- Script personalizado -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const logoutBtn = document.querySelector('a[href="{{ url_for("logout") }}"]');
+            // Alerta de confirmación al cerrar sesión
+            const logoutBtn = document.querySelector('.btn-logout');
             if (logoutBtn) {
                 logoutBtn.addEventListener('click', function (e) {
-                    e.preventDefault(); // Evita redirección inmediata
+                    e.preventDefault();
                     Swal.fire({
-                        title: '¿Está seguro que desea cerrar el panel de administración?',
-                        icon: 'warning',
+                        title: '¿Cerrar Sesión?',
+                        text: '¿Está seguro que desea salir del panel de administración?',
+                        icon: 'question',
                         showCancelButton: true,
-                        confirmButtonText: 'Sí, cerrar',
-                        cancelButtonText: 'Cancelar'
+                        confirmButtonColor: '#7c3aed',
+                        cancelButtonColor: '#64748b',
+                        confirmButtonText: '<i class="fas fa-sign-out-alt me-2"></i>Sí, Cerrar Sesión',
+                        cancelButtonText: '<i class="fas fa-times me-2"></i>Cancelar',
+                        background: 'var(--card-bg)',
+                        color: 'var(--text-primary)'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = logoutBtn.href; // Redirige si confirma
+                            window.location.href = logoutBtn.href;
                         }
                     });
                 });
             }
+
+            // Efecto activo en navegación
+            const currentPage = window.location.pathname;
+            document.querySelectorAll('.nav-link-admin').forEach(link => {
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
         });
     </script>
 </body>

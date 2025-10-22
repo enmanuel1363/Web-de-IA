@@ -1,11 +1,17 @@
 {% extends 'base.html' %}
 
-{% block title %} Inicio {% endblock title %}
+{% block title %} Inicio - AI ACADEMY {% endblock title %}
+
+{% block head %}
+<!-- Estilos específicos para la página de inicio -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+{% endblock %}
 
 {% block body %}
 
-<div class="d-flex flex-column" style="min-height: 100vh; background-color: #e9e9e9;">
+<div class="d-flex flex-column" style="min-height: 100vh; background-color: var(--primary-color);">
 
+    <!-- Carrusel Mantenido -->
     <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
@@ -17,13 +23,28 @@
         </div>
         <div class="carousel-inner">
             <div class="carousel-item active" data-bs-interval="5000">
-                <img src="{{ url_for('static', filename='imagen1.jpg') }}" class="d-block w-100" alt="...">
+                <img src="{{ url_for('static', filename='img/banner.webp') }}" class="d-block w-100 carousel-image" alt="Inteligencia Artificial">
+                <div class="carousel-caption-custom">
+                    <h2>Domina el Futuro con IA</h2>
+                    <p>Cursos especializados en Machine Learning y Deep Learning</p>
+                    <a href="productos" class="btn btn-carousel">Explorar Cursos</a>
+                </div>
             </div>
             <div class="carousel-item" data-bs-interval="5000">
-                <img src="{{ url_for('static', filename='imagen2.jpg') }}" class="d-block w-100" alt="...">
+                <img src="{{ url_for('static', filename='img/imagen2.jpg') }}" class="d-block w-100 carousel-image" alt="Tecnología Avanzada">
+                <div class="carousel-caption-custom">
+                    <h2>Aprende de Expertos</h2>
+                    <p>Instructores con experiencia en la industria tecnológica</p>
+                    <a href="about" class="btn btn-carousel">Conoce Más</a>
+                </div>
             </div>
             <div class="carousel-item" data-bs-interval="5000">
-                <img src="{{ url_for('static', filename='imagen3.png') }}" class="d-block w-100" alt="...">
+                <img src="{{ url_for('static', filename='img/imagen3.png') }}" class="d-block w-100 carousel-image" alt="Innovación Tecnológica">
+                <div class="carousel-caption-custom">
+                    <h2>Transforma tu Carrera</h2>
+                    <p>Prepárate para los trabajos del futuro</p>
+                    <a href="registro" class="btn btn-carousel">Comenzar Ahora</a>
+                </div>
             </div>
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
@@ -38,144 +59,185 @@
         </button>
     </div>
 
-    <!-- Contenedor principal encabezado-->
-    <div class="container-fluid p-5 text-white text-center" style="background-color: #e9e9e9;">
-        <h1 style="color: #000000;">INFORMACIÓN</h1>
-    </div>
-
-    <!-- Contenedor de columnas pie de pagina -->
-    <div class="container mt-5">
-        <div class="row g-4"> <!-- Usamos g-4 para el espaciado entre columnas -->
-            <div class="col-md-4">
-                <div class="border shadow p-3 mb-5 bg-body rounded">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-                    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="border shadow p-3 mb-5 bg-body rounded">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-                    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="border shadow p-3 mb-5 bg-body rounded">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-                    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Contenedor principal encabezado-->
-    <div class="container-fluid p-2 text-white text-center" style="background-color: #e9e9e9;">
-        <h1 style="color: #000000;">SERVICIOS</h1>
-    </div>
-
-    <!-- Contenedor de columnas pie de pagina -->
-    <div class="container mt-5 pb-5" style="background-color: #e9e9e9;">
-        <div class="row">
-            <div class="col-sm-4">
-                <div class="card shadow" style="width: 25rem; height: 600px;">
-                     <div class="text-center" style="border-radius: 100%;">
-                        <img src="{{ url_for('static', filename='IA.png') }}" class="card-img-top" alt="..."
-                            style="border-radius: 200%;">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Ventas</h5>
-                        <p class="card-text">This is longer card with supporting test bellow as a natural lead-in to
-                            additional content. The content is a little bit longer</p>
-                    </div>
-                    <div style="text-align: center; margin-bottom: 10px;">
-                        <button class="btn btn-primary" type="submit"
-                            style=" padding: 0.3rem 1rem; width: 100px; height: 40px;">Ver mas...</button>
+    <!-- Sección de Información Mejorada -->
+    <section class="info-section py-5">
+        <div class="container">
+            <h2 class="section-title-main">Por Qué Elegir AI Academy</h2>
+            <div class="row g-4 mt-4">
+                <div class="col-md-4">
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h4 class="info-title">Expertos en IA</h4>
+                        <p class="info-text">Aprende de profesionales con años de experiencia en la industria de inteligencia artificial y machine learning.</p>
                     </div>
                 </div>
-            </div>
-
-            <div class="col-sm-4 ">
-                <div class="card shadow" style="width: 25rem;  height: 600px;">
-                    <div class="text-center" style="border-radius: 100%;">
-                        <img src="{{ url_for('static', filename='producto.png') }}" class="card-img-top" alt="..."
-                            style="border-radius: 200%;">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Productos</h5>
-                        <p class="card-text">This is a short card</p>
-                    </div>
-                    <div style="text-align: center; margin-bottom: 10px;">
-                        <button class="btn btn-primary" type="submit"
-                            style=" padding: 0.3rem 1rem; width: 100px; height: 40px;">Ver mas...</button>
+                <div class="col-md-4">
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-laptop-code"></i>
+                        </div>
+                        <h4 class="info-title">Proyectos Reales</h4>
+                        <p class="info-text">Trabaja en proyectos prácticos que simulan desafíos reales de la industria tecnológica actual.</p>
                     </div>
                 </div>
-            </div>
-            <div class="col-sm-4">
-                <div class="card shadow" style="width: 25rem;  height: 600px;">
-                      <div class="text-center" style="border-radius: 1000%;">
-                        <img src="{{ url_for('static', filename='ventas.webp') }}" class="card-img-top" alt="..."
-                            style="border-radius: 50%;">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Carrito</h5>
-                        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to
-                            additional content.</p>
-                    </div>
-                    <div style="text-align: center; margin-bottom: 10px;">
-                        <button class="btn btn-primary" type="submit"
-                            style=" padding: 0.3rem 1rem; width: 100px; height: 40px;">Ver mas...</button>
+                <div class="col-md-4">
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <h4 class="info-title">Carrera Profesional</h4>
+                        <p class="info-text">Preparación completa para roles de alta demanda en el mercado laboral de IA y ciencia de datos.</p>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Pie de página -->
-    <style>
-        /* Estilo para el hover de los enlaces */
-        a.text-white:hover {
-            color: #17181a !important;
-            text-decoration: underline;
-        }
-
-        /* Estilo para cambiar el color del texto en el footer */
-        .footer-text {
-            color: #a9a9a8;
-            /* Cambia este valor al color que prefieras */
-        }
-    </style>
-
-    <footer style="margin-top: auto; width: 100%; height: 60%; background-color: #000;">
-        <div class="container mt-5 text-white" style="padding: 50px;">
-            <div class="row">
-                <!-- Columna 1 -->
-                <div class="col-sm-3">
-                    <h5>APP SYSTEM</h5>
-                    <p class="footer-text">Juigalpa, Chontales</p>
-                    <p class="footer-text">Nicaragua</p>
-                </div>
-                <!-- Columna 2 -->
-                <div class="col-sm-3">
-                    <h5>Cursos</h5>
-                    <p class="footer-text">Python</p>
-                    <p class="footer-text">JavaScript</p>
-                    <p class="footer-text">Bootstrap</p>
-                </div>
-                <!-- Columna 3 -->
-                <div class="col-sm-3">
-                    <h5>Links</h5>
-                    <p class="footer-text">Terms & Conditions</p>
-                </div>
-                <!-- Columna 4 -->
-                <div class="col-sm-3">
-                    <h5>Contactos</h5>
-                    <p class="footer-text"><i class="fab fa-facebook"></i> Facebook</p>
-                    <p class="footer-text"><i class="fab fa-instagram"></i> Instagram</p>
+    <!-- Sección de Servicios/Cursos Mejorada -->
+    <section class="services-section py-5">
+        <div class="container">
+            <h2 class="section-title-main">Nuestros Programas Destacados</h2>
+            <p class="section-subtitle text-center mb-5">Domina las tecnologías que están transformando el mundo</p>
+            
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="service-card">
+                        <div class="service-image">
+                            <img src="{{ url_for('static', filename='img/deep.jpg') }}" alt="Machine Learning" class="service-img">
+                        </div>
+                        <div class="service-content">
+                            <h4 class="service-title">Machine Learning Pro</h4>
+                            <p class="service-description">
+                                Domina algoritmos de ML, desde fundamentos hasta técnicas avanzadas de aprendizaje automático.
+                            </p>
+                            <ul class="service-features">
+                                <li><i class="fas fa-check"></i> Algoritmos Supervisados</li>
+                                <li><i class="fas fa-check"></i> Aprendizaje No Supervisado</li>
+                                <li><i class="fas fa-check"></i> Optimización de Modelos</li>
+                            </ul>
+                            <div class="service-footer">
+                                <span class="service-price">$89.99</span>
+                                <button class="btn-service">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <hr>
-                <p class="text-center"> © Copyright - All rigths reserver 2025</p>
+                <div class="col-lg-4 col-md-6">
+                    <div class="service-card featured">
+                        <div class="service-badge">Popular</div>
+                        <div class="service-image">
+                            <img src="{{ url_for('static', filename='img/data.jpg') }}" alt="Deep Learning" class="service-img">
+                        </div>
+                        <div class="service-content">
+                            <h4 class="service-title">Deep Learning Master</h4>
+                            <p class="service-description">
+                                Construye y entrena redes neuronales profundas con TensorFlow y PyTorch.
+                            </p>
+                            <ul class="service-features">
+                                <li><i class="fas fa-check"></i> Redes Neuronales</li>
+                                <li><i class="fas fa-check"></i> Computer Vision</li>
+                                <li><i class="fas fa-check"></i> NLP Avanzado</li>
+                            </ul>
+                            <div class="service-footer">
+                                <span class="service-price">$99.99</span>
+                                <button class="btn-service">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="service-card">
+                        <div class="service-badge">Mejor Precio</div> 
+                        <div class="service-image">
+                            <img src="{{ url_for('static', filename='img/lear.jpg') }}" alt="Data Science" class="service-img">
+                        </div>
+                        <div class="service-content">
+                            <h4 class="service-title">Data Science Complete</h4>
+                            <p class="service-description">
+                                Conviértete en científico de datos con Python, SQL y herramientas de análisis avanzado.
+                            </p>
+                            <ul class="service-features">
+                                <li><i class="fas fa-check"></i> Análisis Estadístico</li>
+                                <li><i class="fas fa-check"></i> Visualización de Datos</li>
+                                <li><i class="fas fa-check"></i> Big Data Tools</li>
+                            </ul>
+                            <div class="service-footer">
+                                <span class="service-price">$79.99</span>
+                                <button class="btn-service">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </footer>
+    </section>
+
+    
+
+    <!-- Sección CTA -->
+    <section class="cta-section py-5">
+        <div class="container">
+            <div class="cta-card">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <h3 class="cta-title">¿Listo para Transformar tu Carrera?</h3>
+                        <p class="cta-description">Únete a miles de estudiantes que ya están construyendo el futuro con IA</p>
+                    </div>
+                    <div class="col-lg-4 text-lg-end">
+                        <a href="registro" class="btn btn-cta">
+                            <i class="fas fa-user-plus me-2"></i>Comenzar Ahora
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
 </div>
+
+<script>
+    // Animación de contador para estadísticas
+    document.addEventListener('DOMContentLoaded', function() {
+        const counters = document.querySelectorAll('.stat-number');
+        const speed = 200;
+
+        counters.forEach(counter => {
+            const updateCount = () => {
+                const target = +counter.getAttribute('data-count');
+                const count = +counter.innerText;
+                const increment = target / speed;
+
+                if (count < target) {
+                    counter.innerText = Math.ceil(count + increment);
+                    setTimeout(updateCount, 1);
+                } else {
+                    counter.innerText = target;
+                }
+            };
+
+            // Iniciar animación cuando el elemento sea visible
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        updateCount();
+                        observer.unobserve(entry.target);
+                    }
+                });
+            });
+
+            observer.observe(counter);
+        });
+    });
+</script>
+
 {% endblock %}
