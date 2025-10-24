@@ -279,23 +279,58 @@ def editar_perfil():
     
 @app.route('/perfil')
 def perfil():
-    if 'id' in session:
-        cursor = mysql.connection.cursor()
-        cursor.execute('SELECT * FROM usuario WHERE id = %s', (session['id'],))
-        usuario = cursor.fetchone()
-        cursor.close()
+    if 'id' not in session:
+        return redirect(url_for('login'))
 
-        if usuario:
-            if usuario['id_rol'] == 1:
-                usuario['rol_nombre'] = 'Administrador'
-            elif usuario['id_rol'] == 2:
-                usuario['rol_nombre'] = 'Cliente'
-            else:
-                usuario['rol_nombre'] = 'Desconocido'  # O cualquier otro valor por defecto
-
-            return render_template('perfil.html', usuario=usuario)
+    cursor = mysql.connection.cursor()
     
-    return redirect(url_for('login'))
+    # Obtener información del usuario
+    cursor.execute('SELECT * FROM usuario WHERE id = %s', (session['id'],))
+    usuario = cursor.fetchone()
+
+    if not usuario:
+        cursor.close()
+        return redirect(url_for('login'))
+
+    # Asignar nombre del rol
+    if usuario['id_rol'] == 1:
+        usuario['rol_nombre'] = 'Administrador'
+    elif usuario['id_rol'] == 2:
+        usuario['rol_nombre'] = 'Cliente'
+    else:
+        usuario['rol_nombre'] = 'Desconocido'
+
+    # Obtener todos los productos/cursos
+    cursor.execute('SELECT * FROM productos')
+    cursos = cursor.fetchall()
+
+    cursor.close()
+    return render_template('perfil.html', usuario=usuario, cursos=cursos)
+
+@app.route('/eliminar_curso_perfil/<int:id>')
+def eliminar_curso_perfil(id):
+    cursor = mysql.connection.cursor()
+    cursor.execute('DELETE FROM productos WHERE id = %s', (id,))
+    mysql.connection.commit()
+    cursor.close()
+    return redirect(url_for('perfil'))
+
+@app.route('/editar_curso_perfil/<int:id>', methods=['GET', 'POST'])
+def editar_curso_perfil(id):
+    cursor = mysql.connection.cursor()
+    if request.method == 'POST':
+        nombre_producto = request.form['nombre_producto']
+        precio = request.form['precio']
+        descripcion = request.form['descripcion']
+        cursor.execute('UPDATE productos SET nombre_producto = %s, precio = %s, descripcion = %s WHERE id = %s', (nombre_producto, precio, descripcion, id))
+        mysql.connection.commit()
+        cursor.close()
+        return jsonify({'success': True, 'message': 'Curso actualizado correctamente'})
+    else:
+        cursor.execute('SELECT id, nombre_producto, precio, descripcion FROM productos WHERE id = %s', (id,))
+        curso = cursor.fetchone()
+        cursor.close()
+        return render_template('editar_curso_perfil.html', curso=curso)
    
 if __name__=='__main__':
     app.run(debug=True, port=8000)#  ejecuta la aplicacion en el puerto 8000 y en modo debug

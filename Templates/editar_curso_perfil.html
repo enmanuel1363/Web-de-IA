@@ -1,0 +1,113 @@
+{% extends 'badmin.html' %} 
+
+{% block title %}Editar Curso{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-form">
+                <div class="card-header">
+                    Editar Curso IA
+                </div>
+                <div class="card-body">
+                    <form action="{{ url_for('editar_curso_perfil', id=curso.id) }}" method="POST">
+                        <div class="form-group">
+                            <label for="nombre_producto">Nombre del producto</label>
+                            <input type="text" id="nombre_producto" name="nombre_producto" value="{{ curso.nombre_producto }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="precio">Precio</label>
+                            <input type="number" step="0.01" id="precio" name="precio" value="{{ curso.precio }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="descripcion">Descripción</label>
+                            <textarea id="descripcion" name="descripcion" rows="3" required>{{ curso.descripcion }}</textarea>
+                        </div>
+                        <button type="submit">Guardar Cambios</button>
+                        <a href="{{ url_for('perfil') }}" class="btn-cancelar">Cancelar</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card-form {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.card-form .card-header {
+    background-color: #0f172a;
+    color: white;
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: bold;
+    padding: 15px 0;
+}
+
+.card-form .card-body {
+    padding: 25px;
+}
+
+.card-form label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.card-form input,
+.card-form textarea {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 15px;
+    margin-bottom: 15px;
+    transition: border-color 0.2s;
+}
+
+.card-form input:focus,
+.card-form textarea:focus {
+    border-color: #009879;
+    outline: none;
+}
+
+.card-form button, .btn-cancelar {
+    width: 48%;
+    background-color: #fff;
+    color: #009879;
+    border: 2px solid #009879;
+    font-size: 1.1rem;
+    font-weight: 500;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+}
+
+.card-form button:hover {
+    background-color: #009879;
+    color: #fff;
+}
+
+.btn-cancelar {
+    color: #6c757d;
+    border-color: #6c757d;
+}
+
+.btn-cancelar:hover {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+</style>
+{% endblock %}

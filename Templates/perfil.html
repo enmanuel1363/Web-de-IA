@@ -1,6 +1,6 @@
-{% extends 'badmin.html' %}  {# Hereda la plantilla base 'badmin.html' #}
+{% extends 'badmin.html' %}
 
-{% block title %}Panel de Administración{% endblock %}  {# Define el título de la página #}
+{% block title %}Panel de Administración{% endblock %}
 
 {% block body %}
 
@@ -409,6 +409,119 @@
     background-color: #009879;
     color: #fff;
 }
+
+/* === Estilos para la sección de cursos === */
+.courses-section {
+    margin: 40px 60px;
+}
+
+.courses-header {
+    background-color: #0f172a;
+    color: white;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.course-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.course-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.course-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.course-name {
+    color: #333;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.course-price {
+    background: #009879;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.course-description {
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+.course-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.course-date, .course-status {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.status-active {
+    color: #009879;
+}
+
+.status-inactive {
+    color: #dc3545;
+}
+
+.no-courses {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    border: 2px dashed #ccc;
+}
+
+.no-courses-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #999;
+}
+
+/* Responsive para cursos */
+@media (max-width: 768px) {
+    .courses-section {
+        margin: 40px 20px;
+    }
+    
+    .courses-grid {
+        grid-template-columns: 1fr;
+    }
+}
   </style>
 </head>
 <body>
@@ -505,6 +618,74 @@
     </div>
   </div>
 
+  <!-- Sección de Cursos Agregados -->
+  <div class="courses-section">
+    <div class="courses-header">
+      Cursos Agregados
+    </div>
+    
+    <div class="courses-grid">
+      {% if cursos %}
+        {% for curso in cursos %}
+        <div class="course-card">
+          <div class="course-header">
+            <h4 class="course-name">{{ curso.nombre_producto or 'Curso sin nombre' }}</h4>
+            <span class="course-price">${{ curso.precio or '0.00' }}</span>
+          </div>
+          <p class="course-description">
+            {{ curso.descripcion or 'Sin descripción disponible' }}
+          </p>
+          <div class="course-meta">
+            <button class="btn-edit edit-btn" data-id="{{ curso.id }}" data-nombre="{{ curso.nombre_producto }}" data-precio="{{ curso.precio }}" data-descripcion="{{ curso.descripcion }}">✎ Editar</button>
+            <a href="{{ url_for('eliminar_curso_perfil', id=curso.id) }}" class="btn-password delete-btn">🗑 Eliminar</a>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="no-courses">
+          <div class="no-courses-icon">
+            📚
+          </div>
+          <h4>No hay cursos agregados</h4>
+          <p>Comienza agregando tu primer curso desde el panel de administración.</p>
+          <a href="{{ url_for('agregar_producto') }}" class="btn-edit" style="margin-top: 1rem; display: inline-block;">
+            ✎ Agregar Primer Curso
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Modal para editar curso -->
+  <div id="modalEditarCurso" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Editar Curso</h2>
+            <span class="close" onclick="cerrarModal('modalEditarCurso')">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="formEditarCurso" method="POST">
+                <div class="form-group">
+                    <label for="editNombreCurso">Nombre del Curso</label>
+                    <input type="text" id="editNombreCurso" name="nombre_producto" required>
+                </div>
+                <div class="form-group">
+                    <label for="editPrecioCurso">Precio</label>
+                    <input type="number" step="0.01" id="editPrecioCurso" name="precio" required>
+                </div>
+                <div class="form-group">
+                    <label for="editDescripcionCurso">Descripción</label>
+                    <textarea id="editDescripcionCurso" name="descripcion" rows="3" required></textarea>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn-cancelar" onclick="cerrarModal('modalEditarCurso')">Cancelar</button>
+                    <button type="submit" class="btn-guardar">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+  </div>
+
   <!-- Modal para editar perfil -->
 <div id="modalEditar" class="modal">
     <div class="modal-content">
@@ -563,6 +744,7 @@
     </div>
 </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
     // Funciones para el modal de edición
     function abrirModalEditar() {
@@ -631,12 +813,67 @@
         });
     });
 
-    // JavaScript para funcionalidades del perfil
     document.addEventListener('DOMContentLoaded', function() {
-      // Botón para cambiar contraseña
-      document.querySelector('.btn-password').addEventListener('click', function() {
-        abrirModalPassword();
-      });
+        // Botones de eliminar curso
+        const deleteButtons = document.querySelectorAll('.delete-btn');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const url = this.href;
+                Swal.fire({
+                    title: '¿Eliminar Curso?',
+                    text: "No podrás revertir esto.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, ¡bórralo!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = url;
+                    }
+                })
+            });
+        });
+
+        // Botones de editar curso
+        const editButtons = document.querySelectorAll('.edit-btn');
+        editButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.dataset.id;
+                const nombre = this.dataset.nombre;
+                const precio = this.dataset.precio;
+                const descripcion = this.dataset.descripcion;
+
+                const modal = document.getElementById('modalEditarCurso');
+                const form = modal.querySelector('#formEditarCurso');
+                
+                form.action = `/editar_curso_perfil/${id}`;
+                modal.querySelector('#editNombreCurso').value = nombre;
+                modal.querySelector('#editPrecioCurso').value = precio;
+                modal.querySelector('#editDescripcionCurso').value = descripcion;
+
+                modal.style.display = 'block';
+            });
+        });
+
+        document.getElementById('formEditarCurso').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            fetch(this.action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert(data.message, 'success');
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showAlert(data.message, 'danger');
+                }
+            });
+        });
     });
   </script>
 </body>

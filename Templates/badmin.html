@@ -2,12 +2,12 @@
 <html lang="es">
 
 <head>
-    <title>{% block titulo %}AI ACADEMY{% endblock %}</title>
+    <title>{% block titulo %}SMARTIA{% endblock %}</title>
 
     <!-- Required meta tags -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="Plataforma de administración para AI ACADEMY - Sistema de gestión de cursos y productos">
+    <meta name="description" content="Plataforma de administración para SMARTIA - Sistema de gestión de cursos IA">
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -70,14 +70,14 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link-admin dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" 
                                aria-expanded="false">
-                                <i class="fas fa-box me-1"></i>Gestión
+                                <i class="fas fa-box me-1"></i>Gestión de cursos
                             </a>
                             <ul class="dropdown-menu dropdown-menu-admin">
                                 <li><a class="dropdown-item dropdown-item-admin" href="{{ url_for('agregar_producto') }}">
-                                    <i class="fas fa-plus-circle me-2"></i>Agregar Curso
+                                    <i class="fas fa-plus-circle me-2"></i>Agregar Nuevo curso
                                 </a></li>
                                 <li><a class="dropdown-item dropdown-item-admin" href="{{ url_for('listar_productos_agregados') }}">
-                                    <i class="fas fa-list me-2"></i>Listar Cursos
+                                    <i class="fas fa-list me-2"></i>Ver cursos Agregados
                                 </a></li>
                             </ul>
                         </li>
