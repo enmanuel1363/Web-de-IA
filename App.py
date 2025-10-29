@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_mysqldb import MySQL
+from passlib.hash import pbkdf2_sha256
 app=Flask(__name__)
 
 app.secret_key = 'appsecretkey' #clave secreta para la sesion
@@ -43,11 +44,11 @@ def accesologin():
         password = request.form['password']
 
         cursor = mysql.connection.cursor()
-        cursor.execute('SELECT * FROM usuario WHERE email = %s AND password = %s', (email, password))
+        cursor.execute('SELECT * FROM usuario WHERE email = %s', (email,))
         user = cursor.fetchone()
         cursor.close()
 
-        if user:
+        if user and pbkdf2_sha256.verify(password, user['password']):
             session['id'] = user['id']
             session['id_rol'] = user['id_rol']
             session['nombre'] = user['nombre']
@@ -124,8 +125,9 @@ def registro():
             return jsonify({'success': False, 'message': 'El correo ya está registrado'})
 
         # Inserta el nuevo usuario en la base de datos con un rol por defecto
+        hashed_password = pbkdf2_sha256.hash(password)
         cursor.execute('INSERT INTO usuario (nombre, email, password, id_rol) VALUES (%s, %s, %s, %s)',
-                       (nombre, email, password, 2))
+                       (nombre, email, hashed_password, 2))
         mysql.connection.commit()
         cursor.close()
 
@@ -245,9 +247,10 @@ def cambiar_password():
             cursor.execute('SELECT password FROM usuario WHERE id = %s', (session['id'],))
             user = cursor.fetchone()
 
-            if user and user['password'] == current_password:
+            if user and pbkdf2_sha256.verify(current_password, user['password']):
                 if new_password == confirm_password:
-                    cursor.execute('UPDATE usuario SET password = %s WHERE id = %s', (new_password, session['id']))
+                    hashed_password = pbkdf2_sha256.hash(new_password)
+                    cursor.execute('UPDATE usuario SET password = %s WHERE id = %s', (hashed_password, session['id']))
                     mysql.connection.commit()
                     cursor.close()
                     return jsonify({'success': True, 'message': 'Contraseña actualizada correctamente'})
