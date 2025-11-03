@@ -8,11 +8,11 @@ app.secret_key = 'appsecretkey' #clave secreta para la sesion
 mysql=MySQL() #inicializa la conexion a la DB
 
 # conexion a la DB
-app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_HOST'] = 'bl5csrnmg2x8uuvnt9yw-mysql.services.clever-cloud.com'
 app.config['MYSQL_PORT'] = 3306
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'ventas'
+app.config['MYSQL_USER'] = 'uxzzxwvxd0nj3pmg'
+app.config['MYSQL_PASSWORD'] = 'qFjcCk0FR5e5GVmerh95'
+app.config['MYSQL_DB'] = 'bl5csrnmg2x8uuvnt9yw'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 
@@ -219,13 +219,17 @@ def eliminar_producto(id):
 def editar_producto(id):
     cursor = mysql.connection.cursor()
     if request.method == 'POST':
-        nombre_producto = request.form['nombre_producto']
-        precio = request.form['precio']
-        descripcion = request.form['descripcion']
-        cursor.execute('UPDATE productos SET nombre_producto = %s, precio = %s, descripcion = %s WHERE id = %s', (nombre_producto, precio, descripcion, id))
-        mysql.connection.commit()
-        cursor.close()
-        return redirect(url_for('listar'))
+        try:
+            nombre_producto = request.form['nombre_producto']
+            precio = request.form['precio']
+            descripcion = request.form['descripcion']
+            cursor.execute('UPDATE productos SET nombre_producto = %s, precio = %s, descripcion = %s WHERE id = %s', (nombre_producto, precio, descripcion, id))
+            mysql.connection.commit()
+            cursor.close()
+            return jsonify({'success': True, 'message': 'Producto actualizado correctamente'})
+        except Exception as e:
+            cursor.close()
+            return jsonify({'success': False, 'message': str(e)})
     else:
         cursor.execute('SELECT id, nombre_producto, precio, descripcion FROM productos WHERE id = %s', (id,))
         producto = cursor.fetchone()

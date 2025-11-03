@@ -32,7 +32,7 @@
                         <td>{{ producto.descripcion }}</td>
                         <td>
                             <div class="action-buttons">
-                                <button class="btn-edit" onclick="abrirModalEditar({{ loop.index     }}, '{{ producto.nombre_producto }}', {{ producto.precio }}, '{{ producto.descripcion }}')">Editar</button>
+                                <button class="btn-edit" onclick="abrirModalEditar({{ producto.id }}, '{{ producto.nombre_producto }}', {{ producto.precio }}, '{{ producto.descripcion }}')">Editar</button>
                                 <a href="{{ url_for('eliminar_producto', id=producto.id) }}" class="btn-delete btn-eliminar">Eliminar</a>
                             </div>
                         </td>
@@ -479,11 +479,9 @@ function confirmarGuardar() {
     });
 }
 
-// Función para enviar el formulario de edición
 function enviarFormularioEdicion() {
     const formData = new FormData(document.getElementById('formEditar'));
-    
-    // Enviar los datos al servidor usando fetch
+
     fetch(`/editar_producto/${productoActualId}`, {
         method: 'POST',
         body: formData,
@@ -491,30 +489,12 @@ function enviarFormularioEdicion() {
             'X-Requested-With': 'XMLHttpRequest'
         }
     })
-    .then(response => {
-        if (response.redirected) {
-            // Si hay redirección, seguirla
-            window.location.href = response.url;
-            return;
-        }
-        return response.json().catch(() => null);
-    })
+    .then(response => response.json())
     .then(data => {
-        if (data && data.success) {
+        if (data.success) {
             Swal.fire({
                 title: '¡Éxito!',
-                text: 'Producto actualizado correctamente',
-                icon: 'success',
-                confirmButtonText: 'Aceptar'
-            }).then(() => {
-                cerrarModal();
-                location.reload();
-            });
-        } else if (!data) {
-            // Si no hay data pero la respuesta fue exitosa, recargar
-            Swal.fire({
-                title: '¡Éxito!',
-                text: 'Producto actualizado correctamente',
+                text: data.message || 'Producto actualizado correctamente',
                 icon: 'success',
                 confirmButtonText: 'Aceptar'
             }).then(() => {
@@ -534,7 +514,7 @@ function enviarFormularioEdicion() {
         console.error('Error:', error);
         Swal.fire({
             title: 'Error',
-            text: 'Hubo un problema al actualizar el producto',
+            text: 'Hubo un problema de conexión al actualizar el producto',
             icon: 'error',
             confirmButtonText: 'Aceptar'
         });
