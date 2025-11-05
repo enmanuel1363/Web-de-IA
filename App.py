@@ -35,7 +35,17 @@ def home():
 @app.route('/admin')
 @admin_required  
 def admin():
-    return render_template('admin.html')
+    cursor = mysql.connection.cursor()
+    # Obtener conteo de usuarios
+    cursor.execute('SELECT COUNT(*) as count FROM usuario')
+    user_count = cursor.fetchone()
+    
+    # Obtener conteo de cursos
+    cursor.execute('SELECT COUNT(*) as count FROM productos')
+    course_count = cursor.fetchone()
+    
+    cursor.close()
+    return render_template('admin.html', user_count=user_count['count'], course_count=course_count['count'])
 
 @app.route('/accesologin', methods=['GET', 'POST'])
 def accesologin():
@@ -53,20 +63,29 @@ def accesologin():
             session['id_rol'] = user['id_rol']
             session['nombre'] = user['nombre']
             if user['id_rol'] == 1:
-                return render_template('admin.html')
+                # Obtener conteos para el panel de administración
+                cursor = mysql.connection.cursor()
+                cursor.execute('SELECT COUNT(*) as count FROM usuario')
+                user_count = cursor.fetchone()
+                cursor.execute('SELECT COUNT(*) as count FROM productos')
+                course_count = cursor.fetchone()
+                cursor.close()
+                return render_template('admin.html', user_count=user_count['count'], course_count=course_count['count'])
             elif user['id_rol'] == 2:
                 return render_template('index.html')
         else:
             flash('Usuario o contraseña incorrecta')
             return render_template('login.html')
-
-
     
     return render_template('login.html')
 
 @app.route('/inicio')
 def inicio():
     return render_template('index.html')#  redirige a la pagina index.html al momento de darle al boton inicio
+
+@app.route('/cursos')
+def cursos():
+    return render_template('cursos.html')
 
 @app.route('/contacto')
 def contacto():
@@ -153,7 +172,16 @@ def listar_usuarios():
     # Cierra el cursor
     cursor.close()
     # Renderiza la plantilla de listar_usuarios, pasando la lista de usuarios
-    return render_template('Listar_Usuarios.html', usuarios=usuarios)
+    return render_template('Listar_Usuarios.html', usuarios=usuarios, user_count=len(usuarios))
+
+@app.route('/user_count')
+@admin_required
+def user_count():
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT COUNT(*) as count FROM usuario')
+    result = cursor.fetchone()
+    cursor.close()
+    return jsonify({'count': result['count']})
 
 @app.route('/eliminar_usuario/<int:id>')
 @admin_required
@@ -175,6 +203,9 @@ def editar_usuario(id):
         mysql.connection.commit()
         cursor.close()
         return jsonify({'success': True, 'message': 'Usuario actualizado correctamente'})
+
+
+
 
 
 @app.route('/productos')
@@ -205,6 +236,7 @@ def guardar_producto():
         cursor.execute('INSERT INTO productos (nombre_producto, precio, descripcion) VALUES (%s, %s, %s)', (nombre_producto, precio, descripcion))
         mysql.connection.commit()
         cursor.close()
+        flash('Curso agregado correctamente', 'success')
         return redirect(url_for('agregar_producto'))
 
 @app.route('/eliminar_producto/<int:id>')
@@ -306,6 +338,17 @@ def perfil():
         usuario['rol_nombre'] = 'Cliente'
     else:
         usuario['rol_nombre'] = 'Desconocido'
+
+    # Obtener todos los usuarios para encontrar el índice
+    cursor.execute('SELECT id FROM usuario ORDER BY id')
+    all_users = cursor.fetchall()
+    user_ids = [user['id'] for user in all_users]
+    try:
+        user_index = user_ids.index(session['id']) + 1
+    except ValueError:
+        user_index = -1 # o algún valor por defecto
+
+    usuario['user_index'] = user_index
 
     # Obtener todos los productos/cursos
     cursor.execute('SELECT * FROM productos')

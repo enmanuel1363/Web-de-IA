@@ -69,7 +69,7 @@
         <div class="row text-center">
 
             <!-- ==========================
-              TARJETA 1: PERFIL DEL USUARIO
+              TARJETA 1: LISTAR USUARIOS
             =========================== -->
             <div class="col-sm-4 mb-3 mb-sm-0">
                 <div class="card" style="background: linear-gradient(180deg,  #0f172a,#10315c,#0f172a);">
@@ -77,7 +77,13 @@
                         <div class="col-md-8">
                             <div class="card-body text-white">
                                 <h5 class="card-title">Listar Usuarios</h5>
-                                {# Botón que lleva a la página 'inicio' #}
+                                
+                                <!-- CONTADOR DE USUARIOS - SOLO EL NÚMERO -->
+                                <div class="counter-simple mb-2">
+                                    {{ user_count }}
+                                </div>
+                                
+                                {# Botón que lleva a la página de listar usuarios #}
                                 <a href="{{ url_for('listar_usuarios')}}" class="btn btn-outline-success">Ver Detalles</a>
                             </div>
                         </div>
@@ -90,7 +96,7 @@
             </div>
 
             <!-- ==========================
-              TARJETA 2: REGISTRAR PRODUCTOS
+              TARJETA 2: AGREGAR CURSOS
             =========================== -->
             <div class="col-sm-4 mb-3 mb-sm-0">
                 <div class="card" style="background: linear-gradient(180deg, #0f172a,#10315c,#0f172a);">
@@ -98,6 +104,12 @@
                         <div class="col-md-8">
                             <div class="card-body text-white">
                                 <h5 class="card-title">Agregar nuevos cursos</h5>
+                                
+                                <!-- CONTADOR DE CURSOS - SOLO EL NÚMERO -->
+                                <div class="counter-simple mb-2">
+                                    {{ course_count }}
+                                </div>
+                                
                                 {# Botón que puede redirigir a agregar productos #}
                                 <a href="{{ url_for('agregar_producto') }}" class="btn btn-outline-success">Ver Detalles</a>
                             </div>
@@ -112,14 +124,20 @@
             </div>
 
             <!-- ==========================
-              TARJETA 3: VISUALIZAR PRODUCTOS
+              TARJETA 3: VER CURSOS DISPONIBLES
             =========================== -->
             <div class="col-sm-4 mb-3 mb-sm-0">
                 <div class="card" style="background: linear-gradient(180deg,  #0f172a,#10315c,#0f172a);">
                     <div class="row g-0">
                         <div class="col-md-8">
                             <div class="card-body text-white">
-                                <h5 class="card-title">Ver cursos disponibles </h5>
+                                <h5 class="card-title">Ver cursos disponibles</h5>
+                                
+                                <!-- CONTADOR DE CURSOS - SOLO EL NÚMERO -->
+                                <div class="counter-simple mb-2">
+                                    {{ course_count }}
+                                </div>
+                                
                                 {# Botón que redirige a la vista de productos #}
                                 <a href="{{ url_for('listar_productos_agregados') }}" class="btn btn-outline-success">Ver Detalles</a>
                             </div>
@@ -134,5 +152,29 @@
         </div>
     </div>
 </div>
+
+<style>
+/* ==========================
+  ESTILOS DEL CONTADOR SIMPLIFICADO
+=========================== */
+.counter-simple {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #4ade80;
+    text-shadow: 0 0 15px rgba(74, 222, 128, 0.7);
+    margin: 10px 0;
+    line-height: 1;
+    text-align: center;
+}
+
+/* ==========================
+  ESTILOS RESPONSIVOS
+=========================== */
+@media (max-width: 768px) {
+    .counter-simple {
+        font-size: 2.5rem;
+    }
+}
+</style>
 
 {% endblock %}

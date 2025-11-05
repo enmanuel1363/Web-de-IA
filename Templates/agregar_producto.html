@@ -3,6 +3,7 @@
 {% block title %}Agregar Producto{% endblock %}
 
 {% block body %}
+<div id="alert-container" style="position: fixed; top: 20px; right: 20px; z-index: 1050;"></div>
 <div class="container">
     <div class="row">
         <!-- Tarjeta izquierda (Agregar Curso) -->
@@ -248,5 +249,53 @@ tbody tr:hover {
         width: 100%;
     }
 }
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
 </style>
+
+<script>
+function showAlert(message, category) {
+    const alertContainer = document.getElementById('alert-container');
+    if (!alertContainer) return;
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${category} alert-dismissible fade show`;
+    alertDiv.role = 'alert';
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+    alertContainer.appendChild(alertDiv);
+
+    setTimeout(() => {
+        alertDiv.classList.remove('show');
+        alertDiv.classList.add('hide');
+        setTimeout(() => alertDiv.remove(), 500);
+    }, 5000);
+}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            showAlert({{ message|tojson }}, {{ category|tojson }});
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+</script>
 {% endblock %}

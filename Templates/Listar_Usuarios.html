@@ -33,7 +33,7 @@
                         <td>{{ usuario.password }}</td>
                         <td>
                             <div class="action-buttons">
-                                <button class="btn-edit" onclick="abrirModalEditar({{ usuario.id }}, '{{ usuario.nombre }}', '{{ usuario.email }}')">Editar</button>
+                                <button class="btn-edit" onclick="abrirModalEditar('{{ usuario.id }}', '{{ usuario.nombre }}', '{{ usuario.email }}')">Editar</button>
                                 <a href="{{ url_for('eliminar_usuario', id=usuario.id) }}" class="btn-delete btn-eliminar">Eliminar</a>
                             </div>
                         </td>
@@ -486,7 +486,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     });
-});
+}); 
 </script>
 
 {% endblock %}

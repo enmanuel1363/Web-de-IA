@@ -32,7 +32,7 @@
                         <td>{{ producto.descripcion }}</td>
                         <td>
                             <div class="action-buttons">
-                                <button class="btn-edit" onclick="abrirModalEditar({{ producto.id }}, '{{ producto.nombre_producto }}', {{ producto.precio }}, '{{ producto.descripcion }}')">Editar</button>
+                                <button class="btn-edit" onclick="abrirModalEditar('{{ producto.id }}', '{{ producto.nombre_producto }}', '{{ producto.precio }}', '{{ producto.descripcion }}')">Editar</button>
                                 <a href="{{ url_for('eliminar_producto', id=producto.id) }}" class="btn-delete btn-eliminar">Eliminar</a>
                             </div>
                         </td>
