@@ -15,7 +15,7 @@
                 <div class="card-body">
                     <form action="{{ url_for('guardar_producto') }}" method="POST">
                         <div class="form-group position-relative">
-                            <label for="nombre_producto" class="text-black">Nombre del producto</label>
+                            <label for="nombre_producto" class="text-black">Nombre del Curso</label>
                             <input type="text" id="nombre_producto" name="nombre_producto" required
                                    data-bs-toggle="tooltip" 
                                    data-bs-placement="top" 
@@ -29,7 +29,7 @@
                             <input type="number" step="0.01" id="precio" name="precio" required
                                    data-bs-toggle="tooltip" 
                                    data-bs-placement="top" 
-                                   data-bs-title="Ingresa el precio del curso en formato decimal. Ejemplo: 99.99 para noventa y nueve con noventa y nueve centavos">
+                                   data-bs-title="Ingresa el precio del curso en formato numerico">
                             <small class="text-muted" style="font-size: 0.75rem; display: block; margin-top: -10px; margin-bottom: 15px;">
                                 
                             </small>
@@ -39,12 +39,12 @@
                             <textarea id="descripcion" name="descripcion" rows="3" required
                                       data-bs-toggle="tooltip" 
                                       data-bs-placement="top" 
-                                      data-bs-title="Describe detalladamente el contenido del curso, objetivos y público objetivo. Mínimo 50 caracteres"></textarea>
+                                      data-bs-title="Describe detalladamente el contenido del curso."></textarea>
                             <small class="text-muted" style="font-size: 0.75rem; display: block; margin-top: -10px; margin-bottom: 15px;">
                               
                             </small>
                         </div>
-                        <button type="submit">Guardar Producto</button>
+                        <button type="submit">Guardar Curso</button>
                     </form>
                 </div>
             </div>
@@ -54,7 +54,7 @@
         <div class="col-md-6">
             <div class="card-table">
                 <div class="card-header">
-                    Lista de Productos
+                    Lista de Cursos
                 </div>
                 <div class="table-container">
                     <table class="table">

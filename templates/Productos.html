@@ -9,7 +9,7 @@
 </div>
 
 <div class="container">
-    <a href="{{ url_for('agregar_producto') }}" class="btn btn-primary mb-3">Agregar Producto</a>
+    <a href="{{ url_for('agregar_producto') }}" class="btn btn-primary mb-3">Agregar Curso</a>
 
     <div class="table-card">
         <div class="table-container">
@@ -17,7 +17,7 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Nombre del producto</th>
+                        <th>Nombre del Curso</th>
                         <th>Precio</th>
                         <th>Descripción</th>
                         <th>Acciones</th>
@@ -48,7 +48,7 @@
 <div id="modalEditar" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h2>Editar Producto</h2>
+            <h2>Editar Curso</h2>
             <span class="close">&times;</span>
         </div>
         <div class="modal-body">
@@ -56,18 +56,27 @@
                 <input type="hidden" id="productoId" name="id">
                 
                 <div class="form-group">
-                    <label for="editNombre">Nombre del Producto</label>
-                    <input type="text" id="editNombre" name="nombre_producto" required>
+                    <label for="editNombre">Nombre del Curso</label>
+                    <input type="text" id="editNombre" name="nombre_producto" required
+                           data-bs-toggle="tooltip" 
+                           data-bs-placement="top" 
+                           data-bs-title="Modifica el nombre del curso. Ejemplo: 'Curso de Machine Learning Avanzado'">
                 </div>
                 
                 <div class="form-group">
                     <label for="editPrecio">Precio</label>
-                    <input type="text" id="editPrecio" name="precio" required>
+                    <input type="text" id="editPrecio" name="precio" required
+                           data-bs-toggle="tooltip" 
+                           data-bs-placement="top" 
+                           data-bs-title="Actualiza el precio del curso. Formato: 99.99 para noventa y nueve con noventa y nueve centavos">
                 </div>
                 
                 <div class="form-group">
                     <label for="editDescripcion">Descripción</label>
-                    <textarea id="editDescripcion" name="descripcion" rows="4" required></textarea>
+                    <textarea id="editDescripcion" name="descripcion" rows="4" required
+                              data-bs-toggle="tooltip" 
+                              data-bs-placement="top" 
+                              data-bs-title="Actualiza la descripción del curso. Incluye contenido, objetivos y público objetivo"></textarea>
                 </div>
                 
                 <div class="modal-buttons">
@@ -445,6 +454,18 @@ table input:focus {
 </style>
 
 <script>
+// Inicializar tooltips cuando se carga la página
+document.addEventListener('DOMContentLoaded', function() {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl, {
+            trigger: 'hover focus',
+            delay: { "show": 500, "hide": 100 },
+            placement: 'top'
+        });
+    });
+});
+
 // Variable global para almacenar el ID del producto actual
 let productoActualId = null;
 

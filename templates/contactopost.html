@@ -29,21 +29,32 @@
                     <form action="" method="post">
                         <div class="mb-3">
                             <label for="nombre" class="form-label">Nombre:</label>
-                            <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Tu nombre">
+                            <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Tu nombre"
+                                   data-bs-toggle="tooltip" 
+                                   data-bs-placement="top" 
+                                   data-bs-title="Ingresa tu nombre completo. Mínimo 2 caracteres, máximo 50 caracteres">
                         </div>
 
                         <div class="mb-3">
                             <label for="email" class="form-label">Email:</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="ejemplo@correo.com">
+                            <input type="email" class="form-control" id="email" name="email" placeholder="ejemplo@correo.com"
+                                   data-bs-toggle="tooltip" 
+                                   data-bs-placement="top" 
+                                   data-bs-title="Ingresa tu dirección de email válida. Ejemplo: usuario@dominio.com">
                         </div>
 
                         <div class="mb-3">
                             <label for="mensaje" class="form-label">Mensaje:</label>
-                            <textarea class="form-control" id="mensaje" name="mensaje" rows="4" placeholder="Escribe tu mensaje aquí..."></textarea>
+                            <textarea class="form-control" id="mensaje" name="mensaje" rows="4" placeholder="Escribe tu mensaje aquí..."
+                                      data-bs-toggle="tooltip" 
+                                      data-bs-placement="top" 
+                                      data-bs-title="Describe detalladamente tu consulta, sugerencia o comentario. Mínimo 10 caracteres, máximo 500 caracteres"></textarea>
                         </div>
 
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">Enviar</button>
+                            <button type="submit" class="btn btn-primary">
+                                Enviar
+                            </button>
                         </div>
                     </form>
 
@@ -52,4 +63,19 @@
         </div>
     </div>
 </div>
+
+<!-- Script para inicializar los tooltips -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar todos los tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl, {
+            trigger: 'hover focus',
+            delay: { "show": 500, "hide": 100 },
+            placement: 'top'
+        });
+    });
+});
+</script>
 {% endblock %}

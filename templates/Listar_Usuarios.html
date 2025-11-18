@@ -57,11 +57,17 @@
                 <input type="hidden" id="editUsuarioId" name="id">
                 <div class="form-group">
                     <label for="editNombre">Nombre</label>
-                    <input type="text" id="editNombre" name="nombre" required>
+                    <input type="text" id="editNombre" name="nombre" required
+                           data-bs-toggle="tooltip" 
+                           data-bs-placement="top" 
+                           data-bs-title="Modifica el nombre completo del usuario. Mínimo 2 caracteres, máximo 50 caracteres">
                 </div>
                 <div class="form-group">
                     <label for="editEmail">Correo</label>
-                    <input type="email" id="editEmail" name="email" required>
+                    <input type="email" id="editEmail" name="email" required
+                           data-bs-toggle="tooltip" 
+                           data-bs-placement="top" 
+                           data-bs-title="Actualiza la dirección de email. Debe ser un formato válido: usuario@dominio.com">
                 </div>
                 <div class="modal-buttons">
                     <button type="button" class="btn-cancelar" onclick="cerrarModal('modalEditar')">Cancelar</button>
@@ -83,19 +89,31 @@
             <form id="formAgregar" method="POST" action="{{ url_for('registro', next='listar_usuarios') }}">
                 <div class="form-group">
                     <label for="nombre">Nombre</label>
-                    <input type="text" id="nombre" name="nombre" required>
+                    <input type="text" id="nombre" name="nombre" required
+                           data-bs-toggle="tooltip" 
+                           data-bs-placement="top" 
+                           data-bs-title="Ingresa el nombre completo del nuevo usuario. Mínimo 2 caracteres, máximo 50 caracteres">
                 </div>
                 <div class="form-group">
                     <label for="email">Correo</label>
-                    <input type="email" id="email" name="email" required>
+                    <input type="email" id="email" name="email" required
+                           data-bs-toggle="tooltip" 
+                           data-bs-placement="top" 
+                           data-bs-title="Ingresa una dirección de email válida. Ejemplo: usuario@dominio.com">
                 </div>
                 <div class="form-group">
                     <label for="password">Contraseña</label>
-                    <input type="password" id="password" name="password" required>
+                    <input type="password" id="password" name="password" required
+                           data-bs-toggle="tooltip" 
+                           data-bs-placement="top" 
+                           data-bs-title="Crea una contraseña segura. Mínimo 8 caracteres, incluyendo mayúsculas, minúsculas y números">
                 </div>
                 <div class="form-group">
                     <label for="confirm_password">Confirmar Contraseña</label>
-                    <input type="password" id="confirm_password" name="confirm_password" required>
+                    <input type="password" id="confirm_password" name="confirm_password" required
+                           data-bs-toggle="tooltip" 
+                           data-bs-placement="top" 
+                           data-bs-title="Vuelve a escribir la contraseña para confirmarla">
                 </div>
                 <div class="modal-buttons">
                     <button type="button" class="btn-cancelar" onclick="cerrarModal('modalAgregar')">Cancelar</button>
@@ -372,6 +390,18 @@ tbody tr:hover {
 </style>
 
 <script>
+// Inicializar tooltips
+document.addEventListener('DOMContentLoaded', function() {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl, {
+            trigger: 'hover focus',
+            delay: { "show": 500, "hide": 100 },
+            placement: 'top'
+        });
+    });
+});
+
 function abrirModalAgregar() {
     document.getElementById('modalAgregar').style.display = 'block';
 }

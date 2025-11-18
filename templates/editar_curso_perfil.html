@@ -14,15 +14,24 @@
                     <form action="{{ url_for('editar_curso_perfil', id=curso.id) }}" method="POST">
                         <div class="form-group">
                             <label for="nombre_producto">Nombre del producto</label>
-                            <input type="text" id="nombre_producto" name="nombre_producto" value="{{ curso.nombre_producto }}" required>
+                            <input type="text" id="nombre_producto" name="nombre_producto" value="{{ curso.nombre_producto }}" required
+                                   data-bs-toggle="tooltip" 
+                                   data-bs-placement="top" 
+                                   data-bs-title="Modifica el nombre del curso. Ejemplo: 'Curso de Machine Learning Avanzado'">
                         </div>
                         <div class="form-group">
                             <label for="precio">Precio</label>
-                            <input type="number" step="0.01" id="precio" name="precio" value="{{ curso.precio }}" required>
+                            <input type="number" step="0.01" id="precio" name="precio" value="{{ curso.precio }}" required
+                                   data-bs-toggle="tooltip" 
+                                   data-bs-placement="top" 
+                                   data-bs-title="Actualiza el precio del curso en formato decimal. Ejemplo: 99.99">
                         </div>
                         <div class="form-group">
                             <label for="descripcion">Descripción</label>
-                            <textarea id="descripcion" name="descripcion" rows="3" required>{{ curso.descripcion }}</textarea>
+                            <textarea id="descripcion" name="descripcion" rows="3" required
+                                      data-bs-toggle="tooltip" 
+                                      data-bs-placement="top" 
+                                      data-bs-title="Actualiza la descripción del curso. Incluye contenido, objetivos y público objetivo">{{ curso.descripcion }}</textarea>
                         </div>
                         <button type="submit">Guardar Cambios</button>
                         <a href="{{ url_for('perfil') }}" class="btn-cancelar">Cancelar</a>
@@ -110,4 +119,19 @@
 }
 
 </style>
+
+<!-- Script para inicializar los tooltips -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar todos los tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl, {
+            trigger: 'hover focus',
+            delay: { "show": 500, "hide": 100 },
+            placement: 'top'
+        });
+    });
+});
+</script>
 {% endblock %}
