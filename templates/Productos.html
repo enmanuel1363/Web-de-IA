@@ -20,6 +20,7 @@
                         <th>Nombre del Curso</th>
                         <th>Precio</th>
                         <th>Descripción</th>
+                        <th>Fecha de Registro</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -30,6 +31,7 @@
                         <td>{{ producto.nombre_producto }}</td>
                         <td>{{ producto.precio }}</td>
                         <td>{{ producto.descripcion }}</td>
+                        <td>{{ producto.fecha_registro }}</td>
                         <td>
                             <div class="action-buttons">
                                 <button class="btn-edit" onclick="abrirModalEditar('{{ producto.id }}', '{{ producto.nombre_producto }}', '{{ producto.precio }}', '{{ producto.descripcion }}')">Editar</button>

@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_mysqldb import MySQL
 from passlib.hash import pbkdf2_sha256
+from datetime import date
 app=Flask(__name__)
 
 app.secret_key = 'appsecretkey' #clave secreta para la sesion
@@ -212,7 +213,7 @@ def editar_usuario(id):
 @admin_required
 def listar_productos_agregados():
     cursor = mysql.connection.cursor()
-    cursor.execute('SELECT id, nombre_producto, precio, descripcion FROM productos')
+    cursor.execute('SELECT id, nombre_producto, precio, descripcion, fecha_registro FROM productos')
     productos = cursor.fetchall()
     cursor.close()
     return render_template('Productos.html', productos=productos)
@@ -221,7 +222,7 @@ def listar_productos_agregados():
 @admin_required
 def agregar_producto():
     cursor = mysql.connection.cursor()
-    cursor.execute('SELECT id, nombre_producto, precio, descripcion FROM productos')
+    cursor.execute('SELECT id, nombre_producto, precio, descripcion, fecha_registro FROM productos')
     productos = cursor.fetchall()
     cursor.close()
     return render_template('agregar_producto.html', productos=productos)
@@ -232,8 +233,9 @@ def guardar_producto():
         nombre_producto = request.form['nombre_producto']
         precio = request.form['precio']
         descripcion = request.form['descripcion']
+        fecha_registro = request.form['fecha_registro']
         cursor = mysql.connection.cursor()
-        cursor.execute('INSERT INTO productos (nombre_producto, precio, descripcion) VALUES (%s, %s, %s)', (nombre_producto, precio, descripcion))
+        cursor.execute('INSERT INTO productos (nombre_producto, precio, descripcion, fecha_registro) VALUES (%s, %s, %s, %s)', (nombre_producto, precio, descripcion, fecha_registro))
         mysql.connection.commit()
         cursor.close()
         flash('Curso agregado correctamente', 'success')
