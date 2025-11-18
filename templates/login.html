@@ -61,14 +61,26 @@
 
                     <!-- Formulario -->
                     <form action="{{ url_for('accesologin') }}" method="POST" class="w-100" style="max-width: 400px;">
-                        <div class="mb-3">
+                        <div class="mb-3 position-relative">
                             <input type="text" name="email" class="form-control" placeholder="Correo electrónico"
-                                required>
+                                required
+                                data-bs-toggle="tooltip" 
+                                data-bs-placement="top" 
+                                data-bs-title="Ingresa tu correo electrónico registrado. Ejemplo: usuario@dominio.com">
+                            <small class="text-muted position-absolute top-100 start-0 mt-1" style="font-size: 0.75rem;">
+                                Pasa el cursor sobre el campo para más información
+                            </small>
                         </div>
 
-                        <div class="mb-3">
+                        <div class="mb-3 position-relative">
                             <input type="password" name="password" class="form-control" placeholder="Contraseña"
-                                required>
+                                required
+                                data-bs-toggle="tooltip" 
+                                data-bs-placement="top" 
+                                data-bs-title="Ingresa tu contraseña. Debe tener al menos 8 caracteres">
+                            <small class="text-muted position-absolute top-100 start-0 mt-1" style="font-size: 0.75rem;">
+                                Pasa el cursor sobre el campo para más información
+                            </small>
                         </div>
 
                         <button type="submit" class="btn btn-primary w-100"
@@ -83,4 +95,19 @@
         </div>
     </div>
 </div>
+
+<!-- Script para inicializar los tooltips de Bootstrap -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar todos los tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl, {
+            trigger: 'hover focus',
+            delay: { "show": 500, "hide": 100 }
+        });
+    });
+});
+</script>
+
 {% endblock %}

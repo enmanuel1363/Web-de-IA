@@ -14,17 +14,35 @@
                 </div>
                 <div class="card-body">
                     <form action="{{ url_for('guardar_producto') }}" method="POST">
-                        <div class="form-group">
-                            <label for="nombre_producto">Nombre del producto</label>
-                            <input type="text" id="nombre_producto" name="nombre_producto" required>
+                        <div class="form-group position-relative">
+                            <label for="nombre_producto" class="text-black">Nombre del producto</label>
+                            <input type="text" id="nombre_producto" name="nombre_producto" required
+                                   data-bs-toggle="tooltip" 
+                                   data-bs-placement="top" 
+                                   data-bs-title="Ingresa el nombre completo del curso. Ejemplo: 'Curso de Machine Learning Avanzado'">
+                            <small class="text-muted" style="font-size: 0.75rem; display: block; margin-top: -10px; margin-bottom: 15px;">
+                              
+                            </small>
                         </div>
-                        <div class="form-group">
-                            <label for="precio">Precio</label>
-                            <input type="number" step="0.01" id="precio" name="precio" required>
+                        <div class="form-group position-relative">
+                            <label for="precio" class="text-black">Precio</label>
+                            <input type="number" step="0.01" id="precio" name="precio" required
+                                   data-bs-toggle="tooltip" 
+                                   data-bs-placement="top" 
+                                   data-bs-title="Ingresa el precio del curso en formato decimal. Ejemplo: 99.99 para noventa y nueve con noventa y nueve centavos">
+                            <small class="text-muted" style="font-size: 0.75rem; display: block; margin-top: -10px; margin-bottom: 15px;">
+                                
+                            </small>
                         </div>
-                        <div class="form-group">
-                            <label for="descripcion">Descripción</label>
-                            <textarea id="descripcion" name="descripcion" rows="3" required></textarea>
+                        <div class="form-group position-relative">
+                            <label for="descripcion" class="text-black">Descripción</label>
+                            <textarea id="descripcion" name="descripcion" rows="3" required
+                                      data-bs-toggle="tooltip" 
+                                      data-bs-placement="top" 
+                                      data-bs-title="Describe detalladamente el contenido del curso, objetivos y público objetivo. Mínimo 50 caracteres"></textarea>
+                            <small class="text-muted" style="font-size: 0.75rem; display: block; margin-top: -10px; margin-bottom: 15px;">
+                              
+                            </small>
                         </div>
                         <button type="submit">Guardar Producto</button>
                     </form>
@@ -66,15 +84,8 @@
 </div>
 
 <style>
-
-    
-
-
-
-
 /* === Tarjeta izquierda (Agregar Curso) === */
 .card-form {
-  
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -94,10 +105,17 @@
     padding: 25px;
 }
 
+/* Estilos para las etiquetas en negro */
 .card-form label {
     font-weight: 600;
     display: block;
     margin-bottom: 5px;
+    color: #000000 !important; /* Negro puro */
+    font-size: 1rem;
+}
+
+.card-form .text-black {
+    color: #000000 !important; /* Negro puro */
 }
 
 .card-form input,
@@ -109,12 +127,20 @@
     font-size: 15px;
     margin-bottom: 15px;
     transition: border-color 0.2s;
+    color: #000000; /* Texto negro en los inputs */
+    background-color: #ffffff; /* Fondo blanco para buen contraste */
+}
+
+.card-form input::placeholder,
+.card-form textarea::placeholder {
+    color: #666666; /* Placeholder en gris oscuro */
 }
 
 .card-form input:focus,
 .card-form textarea:focus {
     border-color: #009879;
     outline: none;
+    background-color: #ffffff; /* Mantener fondo blanco en focus */
 }
 
 .card-form button {
@@ -173,6 +199,7 @@ th, td {
     padding: 12px 15px;
     text-align: left;
     border-bottom: 1px solid #ddd;
+    color: #000000; /* Texto negro en la tabla */
 }
 
 tbody tr:nth-child(even) {
@@ -268,6 +295,31 @@ tbody tr:hover {
     background-color: #f8d7da;
     border-color: #f5c6cb;
 }
+
+/* Estilos para tooltips personalizados */
+.tooltip {
+    font-size: 0.875rem;
+}
+
+.tooltip-inner {
+    background-color: #0f172a;
+    color: white;
+    border-radius: 6px;
+    padding: 8px 12px;
+}
+
+/* Asegurar que todo el texto sea visible */
+body {
+    color: #000000;
+}
+
+.container {
+    color: #000000;
+}
+
+.text-muted {
+    color: #6c757d !important; /* Gris para texto secundario */
+}
 </style>
 
 <script>
@@ -289,6 +341,18 @@ function showAlert(message, category) {
         setTimeout(() => alertDiv.remove(), 500);
     }, 5000);
 }
+
+// Inicializar tooltips
+document.addEventListener('DOMContentLoaded', function() {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl, {
+            trigger: 'hover focus',
+            delay: { "show": 500, "hide": 100 },
+            placement: 'top'
+        });
+    });
+});
 
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}

@@ -40,24 +40,48 @@
 
                     <!-- Formulario -->
                    <form action="{{ url_for('registro', next=next) }}" method="POST" class="w-100" style="max-width: 400px;">
-                        <div class="mb-3">
+                        <div class="mb-3 position-relative">
                             <input type="text" name="nombre" class="form-control" placeholder="Nombre completo"
-                                aria-label="nombrecompleto" required>
+                                aria-label="nombrecompleto" required
+                                data-bs-toggle="tooltip" 
+                                data-bs-placement="top" 
+                                data-bs-title="Ingresa tu nombre completo tal como aparece en tu identificación">
+                            <small class="text-muted position-absolute top-100 start-0 mt-1" style="font-size: 0.7rem;">
+                                Pasa el cursor para más información
+                            </small>
                         </div>
 
-                        <div class="mb-3">
+                        <div class="mb-3 position-relative">
                             <input type="email" name="email" class="form-control" placeholder="Correo electrónico"
-                                aria-label="correo" required>
+                                aria-label="correo" required
+                                data-bs-toggle="tooltip" 
+                                data-bs-placement="top" 
+                                data-bs-title="Ingresa un correo electrónico válido. Ejemplo: usuario@dominio.com">
+                            <small class="text-muted position-absolute top-100 start-0 mt-1" style="font-size: 0.7rem;">
+                                Pasa el cursor para más información
+                            </small>
                         </div>
 
-                        <div class="mb-3">
+                        <div class="mb-3 position-relative">
                             <input type="password" name="password" class="form-control" placeholder="Contraseña"
-                                aria-label="contraseña" required>
+                                aria-label="contraseña" required
+                                data-bs-toggle="tooltip" 
+                                data-bs-placement="top" 
+                                data-bs-title="La contraseña debe tener al menos 8 caracteres, incluir mayúsculas, minúsculas y números">
+                            <small class="text-muted position-absolute top-100 start-0 mt-1" style="font-size: 0.7rem;">
+                                Pasa el cursor para más información
+                            </small>
                         </div>
 
-                        <div class="mb-3">
+                        <div class="mb-3 position-relative">
                             <input type="password" name="confirm_password" class="form-control"
-                                placeholder="Confirmar contraseña" aria-label="confirmar" required>
+                                placeholder="Confirmar contraseña" aria-label="confirmar" required
+                                data-bs-toggle="tooltip" 
+                                data-bs-placement="top" 
+                                data-bs-title="Vuelve a escribir tu contraseña para confirmarla">
+                            <small class="text-muted position-absolute top-100 start-0 mt-1" style="font-size: 0.7rem;">
+                                Pasa el cursor para más información
+                            </small>
                         </div>
 
                         <button
@@ -73,4 +97,18 @@
         </div>
     </div>
 </div>
+
+<!-- Script para inicializar los tooltips de Bootstrap -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar todos los tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl, {
+            trigger: 'hover focus',
+            delay: { "show": 500, "hide": 100 }
+        });
+    });
+});
+</script>
 {% endblock %}
