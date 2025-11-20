@@ -92,8 +92,8 @@ def cursos():
 def contacto():
     return render_template('contacto.html')#  redirige a la pagina contacto.html
 
-@app.route('/contactopost', methods=['GET', 'POST'])
-def contactopost():
+@app.route('/contactos', methods=['GET', 'POST'])
+def contactos():
     usuario={ #Diccionaroio para almacenar los datos del formulario
          'nombre': '',
          'email': '',
